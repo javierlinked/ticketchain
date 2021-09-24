@@ -5,9 +5,9 @@ Tickets for futbol matches can be purchased through various channels. We will on
 In some occasions, in [Argentina](https://duckduckgo.com/?q=argentina&t=hx&va=g&iar=images&iax=images&ia=images) for example, the audience must pick up the physical ticket a few days before the match.
 Paper tickets with several physical security measures such as special inks or holographic bands, are still the option of choice when it comes to prevent counterfeiting. The printed ticket for matches is issued upon presentation of ID. This pair is currently considered more secure than options such as QR codes.
 Very often the viewer lives in another city or country, and then must depend on agents for this tasks. There are fees involved.
-This problem also applies to opera saisons, concerts and, by an extend it could be considered for every show with presale.
+This could be extended to every show with presale tickets.
 ### 2) The solution ⛓
-Sale points are a platform mounted on *Blockchain*. Tickets themselves are *NFTs*. They can be transferable or not, according to the organisers' requirement. Different providers on show industry can subscribe to this service and issue their tickets through them.
+Sale points are a platform mounted on *Blockchain*. Tickets themselves are *NFTs*. They can be transferable to someone other than the original purchaser, according to the organisers' requirement. Different providers on show industry can subscribe to this service and issue their tickets through them.
 ### 3) Benefits 🔐
 - Locals and people living in far places in same conditions when it comes to access to a show. 
 - There are still place for tourist operator to offer tickets on behalf of the customer buying a package.
