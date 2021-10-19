@@ -1,0 +1,13 @@
+{
+  "name": "blockchain-developer-bootcamp-final-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:javierlinked/blockchain-developer-bootcamp-final-project.git",
+  "author": "@javierlinked <javierlinked@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.2",
+    "@truffle/hdwallet-provider": "^1.5.1",
+    "dotenv": "^10.0.0"
+  }
+}
