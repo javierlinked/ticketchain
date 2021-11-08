@@ -1,4 +1,4 @@
-// const path = require("path");
+const path = require("path");
 
 // const infuraURL = 'https://ropsten.infura.io/v3/b85073b90dae4be0b74b274025002a01';
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
