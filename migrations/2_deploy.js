@@ -1,5 +1,5 @@
-const TicketService = artifacts.require("TicketService");
+const TicketContract = artifacts.require("TicketContract");
 
 module.exports = function (deployer) {
-  deployer.deploy(TicketService);
+  deployer.deploy(TicketContract);
 };
