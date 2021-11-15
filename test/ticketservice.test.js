@@ -11,70 +11,98 @@ const TicketContract = artifacts.require("TicketContract");
 contract("TicketContract", async accounts => {
   let contractOwner, alice, bob;
   let contract;
+  const data = web3.utils.fromAscii('additional data');
 
   beforeEach(async () => {
     [contractOwner, alice, bob] = accounts;
     contract = await TicketContract.new();
+    console.log('contractOwner', await web3.eth.getBalance(  contractOwner));
+    console.log('alice', await web3.eth.getBalance( alice));
   });
 
-  // 1 Partner mints tickets
-  it.only("should be able to mint if is owner of this contract", async () => {
-    await contract.mint(contractOwner, 4, 100, web3.utils.fromAscii('theatre'), { from: contractOwner });a
-    assert.equal(await contract.balanceOf(contractOwner, 4), 100);
+
+  // string memory name,
+  // uint256 price,
+  // uint256 amount,
+  // uint256 maxSell,
+  // bytes memory data
+
+
+  // it("should be able to create a new Token show", async () => {
+  //   await contract.create('Cinema Paradiso DEC 4', 5, 100, 4, data, { from: contractOwner });
+
+  //   const id = await contract.nonce();
+  //   assert.equal(await contract.balanceOf(contractOwner, id), 100);
+  // });
+
+  it.only("should be able to sell tokens", async () => {
+    await contract.create('Cinema Paradiso DEC 4', 5, 100, 4, data, { from: contractOwner });
+
+    const idJustCreated = await contract.nonce();
+
+    await contract.buy(idJustCreated, 4, data, { from: alice, value: 5 });
+    // console.log(await contract.tickets(1));
+
+    console.log('contractOwner', await web3.eth.getBalance(   contractOwner));
+    console.log('alice', await web3.eth.getBalance(  alice));
+
+    assert.equal(await contract.balanceOf(alice, idJustCreated), 4);
   });
+
+
 
   // 2 Partner transfers tickets
   // 3 Customer transfers tickets
   // 4 Presents tickets and X burns tickets
 
-  it("should assert true", async () => {
-    console.log(await contract.contract.methods.CINEMA().call());
-    return assert.isTrue(true);
-  });
+  // it("should assert true", async () => {
+  //   console.log(await contract.contract.methods.CINEMA().call());
+  //   return assert.isTrue(true);
+  // });
 
-  it("should transfer", async () => {
-    const abountToTransfer = 2;
+  // it("should transfer", async () => {
+  //   const abountToTransfer = 2;
 
-    // en un objecto se pasa el msg como contexto ?
-    await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
+  //   // en un objecto se pasa el msg como contexto ?
+  //   await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
 
-    // error
-    // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
-
-
-    assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
-    assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
-
-  });
-
-  it("should transfer2", async () => {
-    const abountToTransfer = 2;
-
-    // en un objecto se pasa el msg como contexto ?
-    await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
-
-    // error
-    // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
+  //   // error
+  //   // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
 
 
-    assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
-    assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
+  //   assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
+  //   assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
+
+  // });
+
+  // it("should transfer2", async () => {
+  //   const abountToTransfer = 2;
+
+  //   // en un objecto se pasa el msg como contexto ?
+  //   await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
+
+  //   // error
+  //   // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
 
 
-  });
+  //   assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
+  //   assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
 
 
-  it("should transfer3", async () => {
-    const abountToTransfer = 2;
-
-    // en un objecto se pasa el msg como contexto ?
-    await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
-    // error
-    // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
+  // });
 
 
-    assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
-    assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
+  // it("should transfer3", async () => {
+  //   const abountToTransfer = 2;
 
-  });
+  //   // en un objecto se pasa el msg como contexto ?
+  //   await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
+  //   // error
+  //   // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
+
+
+  //   assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
+  //   assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
+
+  // });
 });

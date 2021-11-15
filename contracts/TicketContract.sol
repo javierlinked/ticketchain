@@ -5,52 +5,98 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
+
 // import "@openzeppelin/contracts/utils/Strings.sol";
 // import "base64-sol/base64.sol";
 
 /// @custom:security-contact @javierlinked
 contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
-    uint256 public constant CINEMA = 1;
-    uint256 public constant FUTBOL = 2;
+    uint256 public nonce;
 
-    // struct Ticket {
-    //     string name;
-    //     string description;
-    //     uint256 price;
-    //     string imageURI;
-    //     string linkURI;
-    // }
-
-    // mapping(uint256 => Ticket) public tickets;
-
-    /// @custom:security-contact @javierlinked
-    // TODO: move URL to ipfs
-    constructor()
-        ERC1155(
-            "https://raw.githubusercontent.com/javierlinked/blockchain-developer-bootcamp-final-project/main/metadata/{id}.json"
-        )
-    {
-        _mint(msg.sender, CINEMA, 100, "");
-        _mint(msg.sender, FUTBOL, 100, "");
+    struct Ticket {
+        string name;
+        uint256 price; // in Ether
+        uint256 maxSell;
     }
 
-    // constructor() ERC1155("") {}
+    mapping(uint256 => Ticket) public tickets;
 
-    /// overrides only add 'onlyOwner' restriction
+    event TicketCreated(
+        uint256 indexed id,
+        address indexed minter,
+        string indexed name,
+        uint256 price,
+        uint256 amount,
+        uint256 maxSell
+    );
 
-    // TODO: adapt to IPFS
-    function setURI(string memory newuri) public onlyOwner {
-        _setURI(newuri);
+    event TicketSold(
+        uint256 indexed id,
+        address indexed from,
+        address indexed to,
+        uint256 amount
+    );
+
+    constructor() ERC1155("") {}
+
+    function create(
+        string memory name,
+        uint256 price,
+        uint256 amount,
+        uint256 maxSell,
+        bytes memory data
+    ) public onlyOwner returns (uint256 id) {
+        address owner = msg.sender;
+        uint256 newId = ++nonce;
+        Ticket memory newTicket = Ticket(name, price, maxSell);
+        tickets[newId] = newTicket;
+        _mint(owner, newId, amount, data);
+        emit TicketCreated(newId, owner, name, price, amount, maxSell);
+        return newId;
     }
 
-    function mint(
-        address account,
+    // verificar address to is not address(0)
+    // verificar to has enough balance
+    // verificar amount is > 0 and < maxSell allowed by person
+    // verificar cantidad de tickets del owner
+    function buy(
         uint256 id,
         uint256 amount,
         bytes memory data
-    ) public onlyOwner {
-        _mint(account, id, amount, data);
+    ) public payable {
+        // require(tickets[id].price * amount <= msg.value);
+        address ow = owner();
+        address buyer = payable(msg.sender);
+
+        (bool sent, ) = ow.call{value: tickets[id].price}("");
+        require(sent, "Failed to send Ether");
+
+        _safeTransferFrom(
+            ow,
+            buyer,
+            id,
+            amount,
+            data
+        );
+
+        emit TicketSold(id, a, buyer, amount);
     }
+
+    // function buyItem(uint sku)
+    //     public
+    //     payable
+    //     forSale(sku)
+    //     paidEnough(items[sku].price)
+    //     checkValue(sku)
+    // {
+    //     items[sku].buyer = msg.sender;
+    //     items[sku].state = State.Sold;
+
+    //     (bool success, ) = items[sku].seller.call.value(items[sku].price)("");
+    //     require(success, "Transfer failed.");
+
+    //     emit LogSold(sku);
+    // }
 
     function burn(
         address account,
@@ -58,15 +104,6 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint256 amount
     ) public override onlyOwner {
         _burn(account, id, amount);
-    }
-
-    function mintBatch(
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) public onlyOwner {
-        _mintBatch(to, ids, amounts, data);
     }
 
     /**
@@ -106,12 +143,6 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 
-    // function uri(uint256 id) public view virtual override returns (string memory) {
-    //     return string(abi.encodePacked(
-    //         "https://raw.githubusercontent.com/javierlinked/blockchain-developer-bootcamp-final-project/main/metadata/{id}.json",
-    //         Strings.toString(id) ));
-    // }
-
     //test
     // function buildMetadata(uint256 _tokenId)
     //     public
@@ -143,16 +174,5 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
     //     );
 
     //     return output;
-    // }
-
-    // function tokenURI(uint256 _tokenId)
-    //     public
-    //     view
-    //     virtual
-    //     override
-    //     returns (string memory)
-    // {
-    //     // require(_exists(_tokenId),"ERC721Metadata: URI query for nonexistent token");
-    //     return buildMetadata(_tokenId);
     // }
 }
