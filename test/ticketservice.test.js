@@ -13,17 +13,19 @@ contract("TicketContract", async accounts => {
   let contract;
 
   beforeEach(async () => {
-    console.log("beforeEach");
     [contractOwner, alice, bob] = accounts;
     contract = await TicketContract.new();
   });
 
   // 1 Partner mints tickets
+  it.only("should be able to mint if is owner of this contract", async () => {
+    await contract.mint(contractOwner, 4, 100, web3.utils.fromAscii('theatre'), { from: contractOwner });a
+    assert.equal(await contract.balanceOf(contractOwner, 4), 100);
+  });
 
-  
-// 2 Partner transfers tickets
-// 3 Customer transfers tickets
-// 4 Presents tickets and X burns tickets
+  // 2 Partner transfers tickets
+  // 3 Customer transfers tickets
+  // 4 Presents tickets and X burns tickets
 
   it("should assert true", async () => {
     console.log(await contract.contract.methods.CINEMA().call());
@@ -58,6 +60,7 @@ contract("TicketContract", async accounts => {
     assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
     assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
 
+
   });
 
 
@@ -65,7 +68,7 @@ contract("TicketContract", async accounts => {
     const abountToTransfer = 2;
 
     // en un objecto se pasa el msg como contexto ?
-    await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner});
+    await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
     // error
     // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
 

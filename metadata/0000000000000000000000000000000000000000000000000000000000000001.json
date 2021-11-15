@@ -1,5 +1,6 @@
 {
-    "id": 1,
     "name": "Cinema Ticket",
-    "image": "https://files.rcnradio.com/public/styles/d_img_850x580/public/2018-11/whatsapp_image_2018-11-06_at_3.45.45_pm_0.jpeg"
+    "description": "Cinema Ticket",
+    "image": "https://files.rcnradio.com/public/styles/d_img_850x580/public/2018-11/whatsapp_image_2018-11-06_at_3.45.45_pm_0.jpeg",
+    "external_link": ""
 }
