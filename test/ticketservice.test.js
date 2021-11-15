@@ -36,11 +36,11 @@ contract("TicketContract", async accounts => {
   // });
 
   it.only("should be able to sell tokens", async () => {
-    await contract.create('Cinema Paradiso DEC 4', 5, 100, 4, data, { from: contractOwner });
+    await contract.create('Cinema Paradiso DEC 4', 4, 100, 4, data, { from: contractOwner });
 
     const idJustCreated = await contract.nonce();
 
-    await contract.buy(idJustCreated, 4, data, { from: alice, value: 5 });
+    await contract.buy(idJustCreated, 99, data, { from: alice, value: 16 });
     // console.log(await contract.tickets(1));
 
     console.log('contractOwner', await web3.eth.getBalance(   contractOwner));

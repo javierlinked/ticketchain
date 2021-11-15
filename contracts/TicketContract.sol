@@ -16,7 +16,7 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
     struct Ticket {
         string name;
         uint256 price; // in Ether
-        uint256 maxSell;
+        uint256 maxSellPerPerson;
     }
 
     mapping(uint256 => Ticket) public tickets;
@@ -27,7 +27,7 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         string indexed name,
         uint256 price,
         uint256 amount,
-        uint256 maxSell
+        uint256 maxSellPerPerson
     );
 
     event TicketSold(
@@ -36,6 +36,19 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         address indexed to,
         uint256 amount
     );
+
+    modifier paidEnough(uint256 amount, uint256 id) {
+        uint256 total = amount * tickets[id].price;
+        require(total != msg.value, "Incorrect amount1");
+        _;
+    }
+
+    modifier allowedSell(uint256 amount, uint256 id) {
+        require(balanceOf(owner(), id) >= amount, "Not enough tickets");
+        require(amount > 0, "Invalid ammount");
+        require(amount <= tickets[id].maxSellPerPerson, "Incorrect amount2");
+        _;
+    }
 
     constructor() ERC1155("") {}
 
@@ -55,31 +68,23 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         return newId;
     }
 
-    // verificar address to is not address(0)
-    // verificar to has enough balance
-    // verificar amount is > 0 and < maxSell allowed by person
-    // verificar cantidad de tickets del owner
     function buy(
         uint256 id,
         uint256 amount,
         bytes memory data
-    ) public payable {
-        // require(tickets[id].price * amount <= msg.value);
-        address ow = owner();
-        address buyer = payable(msg.sender);
+    ) public payable allowedSell(amount, id) paidEnough(amount, id) {
+        
+        require(tickets[id].price != 0, "Ticket does not exist");
 
-        (bool sent, ) = ow.call{value: tickets[id].price}("");
+        address payable owner = payable(owner());
+        address buyer = msg.sender;
+
+        (bool sent, ) = owner.call{value: msg.value}("");
         require(sent, "Failed to send Ether");
 
-        _safeTransferFrom(
-            ow,
-            buyer,
-            id,
-            amount,
-            data
-        );
+        _safeTransferFrom(owner, buyer, id, amount, data);
 
-        emit TicketSold(id, a, buyer, amount);
+        emit TicketSold(id, owner, buyer, amount);
     }
 
     // function buyItem(uint sku)
