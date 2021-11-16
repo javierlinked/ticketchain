@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 // import "base64-sol/base64.sol";
 
 /// @custom:security-contact @javierlinked
@@ -37,14 +39,17 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
 
     modifier paidEnough(uint256 amount, uint256 id) {
         uint256 total = amount * tickets[id].price;
-        require(total != msg.value, "Incorrect payment");
+        require(total <= msg.value, "Incorrect amount");
         _;
     }
 
     modifier allowedSell(uint256 amount, uint256 id) {
-        require(balanceOf(owner(), id) >= amount, "Not enough tickets");
         require(amount > 0, "Amount must bigger than 0");
-        require(amount <= tickets[id].maxSellPerPerson, "Max ammount per person reached");
+        require(balanceOf(owner(), id) >= amount, "Not enough tickets");
+        require(
+            amount <= tickets[id].maxSellPerPerson,
+            "Max ammount per person reached"
+        );
         _;
     }
 
@@ -75,7 +80,14 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint256 id,
         uint256 amount,
         bytes memory data
-    ) public payable allowedSell(amount, id) paidEnough(amount, id) validate(id) whenNotPaused {
+    )
+        public
+        payable
+        allowedSell(amount, id)
+        paidEnough(amount, id)
+        validate(id)
+        whenNotPaused
+    {
         address payable owner = payable(owner());
         address buyer = msg.sender;
         (bool sent, ) = owner.call{value: msg.value}("");

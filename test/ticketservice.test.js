@@ -20,92 +20,95 @@ contract("TicketContract", async accounts => {
 
 
   it("should be able to create a new Token show", async () => {
-    await contract.create('Cinema Paradiso DEC 4', 5, 100, 4, data, { from: contractOwner });
+    // act
+    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
 
-    const id = await contract.nonce();
+    // assert
     assert.equal(await contract.balanceOf(contractOwner, id), 100);
   });
 
-  it("should be able to sell tokens", async () => {
-    await contract.create('Cinema Paradiso DEC 4', 4, 100, 4, data, { from: contractOwner });
+  it("should be fail on creating new token when has not ownership", async () => {
+    // act
+    try {
+      const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, alice);
+    } catch (error) {
 
-    const idJustCreated = await contract.nonce();
-
-    await contract.buy(idJustCreated, 4, data, { from: alice });
-
-    console.log('contractOwner', await web3.eth.getBalance(   contractOwner));
-    console.log('alice', await web3.eth.getBalance(  alice));
-
-    assert.equal(await contract.balanceOf(alice, idJustCreated), 4);
+      //assert
+      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Ownable: caller is not the owner -- Reason given: Ownable: caller is not the owner.");
+    }
   });
 
   it("should be able to sell tokens", async () => {
-    await contract.create('Cinema Paradiso DEC 4', 4, 100, 4, data, { from: contractOwner });
+    // arrange
+    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
 
-    const idJustCreated = await contract.nonce();
+    // act
+    await contract.buy(id, 4, data, { from: alice, value: 20 });
+
+    // assert
+    assert.equal(await contract.balanceOf(alice, id), 4);
+  });
+
+  it("should fail on selling when contract is paused", async () => {
+    // arrange
+    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
+
+    // act
     await contract.pause();
     try {
-      await contract.buy(idJustCreated, 4, data, { from: alice });
+      await contract.buy(id, 4, data, { from: alice, value: 20 });
     } catch (error) {
+
+      //assert
       assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Pausable: paused -- Reason given: Pausable: paused.");
     }
-
-
-    console.log('aaa');
   });
 
-  // 2 Partner transfers tickets
-  // 3 Customer transfers tickets
-  // 4 Presents tickets and X burns tickets
+  it("should fail on selling when not enough minted tickets", async () => {
+    // arrange
+    const id = await createTicket('Cinema Paradiso DEC 4', 5, 2, 4, contractOwner);
 
-  // it("should assert true", async () => {
-  //   console.log(await contract.contract.methods.CINEMA().call());
-  //   return assert.isTrue(true);
-  // });
+    // act
+    try {
+      await contract.buy(id, 4, data, { from: alice, value: 20 });
+    } catch (error) {
 
-  // it("should transfer", async () => {
-  //   const abountToTransfer = 2;
+      //assert
+      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Not enough tickets -- Reason given: Not enough tickets.");
+    }
+  });
 
-  //   // en un objecto se pasa el msg como contexto ?
-  //   await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
+  it("should fail on selling when trying to buy more than allowed", async () => {
+    // arrange
+    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
 
-  //   // error
-  //   // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
+    // act
+    try {
+      await contract.buy(id, 8, data, { from: alice, value: 40 });
+    } catch (error) {
 
+      //assert
+      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Max ammount per person reached -- Reason given: Max ammount per person reached.");
+    }
+  });
 
-  //   assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
-  //   assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
+  it("should fail on selling when trying to buy without enough funds", async () => {
+    // arrange
+    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
 
-  // });
+    // act
+    try {
+      await contract.buy(id, 2, data, { from: alice, value: 2 });
+    } catch (error) {
 
-  // it("should transfer2", async () => {
-  //   const abountToTransfer = 2;
+      //assert
+      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Incorrect amount -- Reason given: Incorrect amount.");
+    }
+  });
 
-  //   // en un objecto se pasa el msg como contexto ?
-  //   await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
-
-  //   // error
-  //   // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
-
-
-  //   assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
-  //   assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
-
-
-  // });
-
-
-  // it("should transfer3", async () => {
-  //   const abountToTransfer = 2;
-
-  //   // en un objecto se pasa el msg como contexto ?
-  //   await contract.safeTransferFrom(contractOwner, alice, 1, abountToTransfer, web3.utils.fromAscii('hola'), { from: contractOwner });
-  //   // error
-  //   // await contract.safeTransferFrom(contractOwner, alice, 1, 10, web3.utils.fromAscii('hola'), {from: alice});
-
-
-  //   assert.equal(await contract.balanceOf(alice, 1), abountToTransfer);
-  //   assert.equal(await contract.balanceOf(contractOwner, 1), 100 - abountToTransfer);
-
-  // });
+  async function createTicket(name, price, amount, maxSellPerPerson, owner) {
+    await contract.create(name, price, amount, maxSellPerPerson, data, { from: owner });
+    const idJustCreated = await contract.nonce();
+    return idJustCreated;
+  }
 });

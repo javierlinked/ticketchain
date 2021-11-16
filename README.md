@@ -21,3 +21,24 @@ Sale points are a platform mounted on *Blockchain*. Tickets themselves are *NFTs
 ### 5) Architectural design 📐
 ### 6) Proposed tech stack ⚒️
 
+
+#### Project Structure
+```
+.
+├── build/                   # Truffle build (alternatively `build`)
+├── contracts/               # Truffle contracts (alternatively `contracts`)
+├── migrations/              # Truffle migrations (alternatively `migrations`)
+├── test/                    # Automated tests (alternatively `tests`)
+├── truffle-config.js        # Truffle config
+└── README.md
+
+```
+
+#### End of course NFT address
+
+address: `0x23db5E49544C5A5104316E6eE9734120F3eec357`
+
+#### Front end for the project (mvp & testing purposes)
+
+// TODO
+
