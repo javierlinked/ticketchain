@@ -1,8 +1,5 @@
 const TicketContract = artifacts.require("TicketContract");
 
-// beforeEach(async function () {
-//   console.log("beforeEach");
-// });
 /*
  * uncomment accounts to access the test accounts made available by the
  * Ethereum client
@@ -12,36 +9,29 @@ contract("TicketContract", async accounts => {
   let contractOwner, alice, bob;
   let contract;
   const data = web3.utils.fromAscii('additional data');
+  // 0x6164646974696f6e616c2064617461
 
   beforeEach(async () => {
     [contractOwner, alice, bob] = accounts;
     contract = await TicketContract.new();
-    console.log('contractOwner', await web3.eth.getBalance(  contractOwner));
-    console.log('alice', await web3.eth.getBalance( alice));
+    // console.log('contractOwner', await web3.eth.getBalance(  contractOwner));
+    // console.log('alice', await web3.eth.getBalance( alice));
   });
 
 
-  // string memory name,
-  // uint256 price,
-  // uint256 amount,
-  // uint256 maxSell,
-  // bytes memory data
+  it("should be able to create a new Token show", async () => {
+    await contract.create('Cinema Paradiso DEC 4', 5, 100, 4, data, { from: contractOwner });
 
+    const id = await contract.nonce();
+    assert.equal(await contract.balanceOf(contractOwner, id), 100);
+  });
 
-  // it("should be able to create a new Token show", async () => {
-  //   await contract.create('Cinema Paradiso DEC 4', 5, 100, 4, data, { from: contractOwner });
-
-  //   const id = await contract.nonce();
-  //   assert.equal(await contract.balanceOf(contractOwner, id), 100);
-  // });
-
-  it.only("should be able to sell tokens", async () => {
+  it("should be able to sell tokens", async () => {
     await contract.create('Cinema Paradiso DEC 4', 4, 100, 4, data, { from: contractOwner });
 
     const idJustCreated = await contract.nonce();
 
-    await contract.buy(idJustCreated, 99, data, { from: alice, value: 16 });
-    // console.log(await contract.tickets(1));
+    await contract.buy(idJustCreated, 4, data, { from: alice });
 
     console.log('contractOwner', await web3.eth.getBalance(   contractOwner));
     console.log('alice', await web3.eth.getBalance(  alice));
@@ -49,7 +39,20 @@ contract("TicketContract", async accounts => {
     assert.equal(await contract.balanceOf(alice, idJustCreated), 4);
   });
 
+  it("should be able to sell tokens", async () => {
+    await contract.create('Cinema Paradiso DEC 4', 4, 100, 4, data, { from: contractOwner });
 
+    const idJustCreated = await contract.nonce();
+    await contract.pause();
+    try {
+      await contract.buy(idJustCreated, 4, data, { from: alice });
+    } catch (error) {
+      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Pausable: paused -- Reason given: Pausable: paused.");
+    }
+
+
+    console.log('aaa');
+  });
 
   // 2 Partner transfers tickets
   // 3 Customer transfers tickets

@@ -5,8 +5,6 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
-
-// import "@openzeppelin/contracts/utils/Strings.sol";
 // import "base64-sol/base64.sol";
 
 /// @custom:security-contact @javierlinked
@@ -39,14 +37,19 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
 
     modifier paidEnough(uint256 amount, uint256 id) {
         uint256 total = amount * tickets[id].price;
-        require(total != msg.value, "Incorrect amount1");
+        require(total != msg.value, "Incorrect payment");
         _;
     }
 
     modifier allowedSell(uint256 amount, uint256 id) {
         require(balanceOf(owner(), id) >= amount, "Not enough tickets");
-        require(amount > 0, "Invalid ammount");
-        require(amount <= tickets[id].maxSellPerPerson, "Incorrect amount2");
+        require(amount > 0, "Amount must bigger than 0");
+        require(amount <= tickets[id].maxSellPerPerson, "Max ammount per person reached");
+        _;
+    }
+
+    modifier validate(uint256 id) {
+        require(tickets[id].price != 0, "Ticket does not exist");
         _;
     }
 
@@ -58,7 +61,7 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint256 amount,
         uint256 maxSell,
         bytes memory data
-    ) public onlyOwner returns (uint256 id) {
+    ) public onlyOwner whenNotPaused returns (uint256 id) {
         address owner = msg.sender;
         uint256 newId = ++nonce;
         Ticket memory newTicket = Ticket(name, price, maxSell);
@@ -72,42 +75,20 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint256 id,
         uint256 amount,
         bytes memory data
-    ) public payable allowedSell(amount, id) paidEnough(amount, id) {
-        
-        require(tickets[id].price != 0, "Ticket does not exist");
-
+    ) public payable allowedSell(amount, id) paidEnough(amount, id) validate(id) whenNotPaused {
         address payable owner = payable(owner());
         address buyer = msg.sender;
-
         (bool sent, ) = owner.call{value: msg.value}("");
         require(sent, "Failed to send Ether");
-
         _safeTransferFrom(owner, buyer, id, amount, data);
-
         emit TicketSold(id, owner, buyer, amount);
     }
-
-    // function buyItem(uint sku)
-    //     public
-    //     payable
-    //     forSale(sku)
-    //     paidEnough(items[sku].price)
-    //     checkValue(sku)
-    // {
-    //     items[sku].buyer = msg.sender;
-    //     items[sku].state = State.Sold;
-
-    //     (bool success, ) = items[sku].seller.call.value(items[sku].price)("");
-    //     require(success, "Transfer failed.");
-
-    //     emit LogSold(sku);
-    // }
 
     function burn(
         address account,
         uint256 id,
         uint256 amount
-    ) public override onlyOwner {
+    ) public override onlyOwner whenNotPaused {
         _burn(account, id, amount);
     }
 
@@ -147,37 +128,4 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
     ) internal virtual override(ERC1155, ERC1155Pausable) {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
-
-    //test
-    // function buildMetadata(uint256 _tokenId)
-    //     public
-    //     view
-    //     returns (string memory)
-    // {
-    //     Ticket memory currentTicket = tickets[_tokenId];
-
-    //     string memory json = Base64.encode(
-    //         bytes(
-    //             abi.encodePacked(
-    //                 '{"name":"',
-    //                 currentTicket.name,
-    //                 '", "description":"',
-    //                 currentTicket.description,
-    //                 '", "price": "',
-    //                 currentTicket.price,
-    //                 '", "imageURI": "',
-    //                 currentTicket.imageURI,
-    //                 '", "linkURI": "',
-    //                 currentTicket.linkURI,
-    //                 '"}'
-    //             )
-    //         )
-    //     );
-
-    //     string memory output = string(
-    //         abi.encodePacked("data:application/json;base64,", json)
-    //     );
-
-    //     return output;
-    // }
 }
