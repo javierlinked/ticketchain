@@ -1,22 +1,26 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
+pragma solidity 0.8.10;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
 
 // import "base64-sol/base64.sol";
 
 /// @custom:security-contact @javierlinked
 contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
-    uint256 public nonce;
+    using Counters for Counters.Counter;
+    Counters.Counter public tokenIdCounter;
 
     struct Ticket {
         string name;
-        uint256 price; // in Ether
-        uint256 maxSellPerPerson;
+        uint price; // in gwei
+        string showTime;
+        uint maxSellPerPerson;
     }
 
     mapping(uint256 => Ticket) public tickets;
@@ -25,25 +29,25 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint256 indexed id,
         address indexed minter,
         string indexed name,
-        uint256 price,
-        uint256 amount,
-        uint256 maxSellPerPerson
+        uint price,
+        uint amount,
+        uint maxSellPerPerson
     );
 
     event TicketSold(
         uint256 indexed id,
         address indexed from,
         address indexed to,
-        uint256 amount
+        uint amount
     );
 
-    modifier paidEnough(uint256 amount, uint256 id) {
-        uint256 total = amount * tickets[id].price;
+    modifier paidEnough(uint amount, uint256 id) {
+        uint total = amount * tickets[id].price;
         require(total <= msg.value, "Incorrect amount");
         _;
     }
 
-    modifier allowedSell(uint256 amount, uint256 id) {
+    modifier allowedSell(uint amount, uint256 id) {
         require(amount > 0, "Amount must bigger than 0");
         require(balanceOf(owner(), id) >= amount, "Not enough tickets");
         require(
@@ -62,23 +66,24 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
 
     function create(
         string memory name,
-        uint256 price,
-        uint256 amount,
-        uint256 maxSell,
+        uint price,
+        uint amount,
+        string memory showTime,
+        uint maxSellPerPerson,
         bytes memory data
-    ) public onlyOwner whenNotPaused returns (uint256 id) {
+    ) public onlyOwner whenNotPaused {
         address owner = msg.sender;
-        uint256 newId = ++nonce;
-        Ticket memory newTicket = Ticket(name, price, maxSell);
+        tokenIdCounter.increment();
+        Ticket memory newTicket = Ticket(name, price, showTime, maxSellPerPerson);
+        uint256 newId = tokenIdCounter.current();
         tickets[newId] = newTicket;
         _mint(owner, newId, amount, data);
-        emit TicketCreated(newId, owner, name, price, amount, maxSell);
-        return newId;
+        emit TicketCreated(newId, owner, name, price, amount, maxSellPerPerson);
     }
 
     function buy(
         uint256 id,
-        uint256 amount,
+        uint amount,
         bytes memory data
     )
         public
@@ -99,7 +104,7 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
     function burn(
         address account,
         uint256 id,
-        uint256 amount
+        uint amount
     ) public override onlyOwner whenNotPaused {
         _burn(account, id, amount);
     }

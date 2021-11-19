@@ -1,11 +1,11 @@
-const TicketContract = artifacts.require("TicketContract");
+const TicketContract = artifacts.require('TicketContract');
 
 /*
  * uncomment accounts to access the test accounts made available by the
  * Ethereum client
  * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
  */
-contract("TicketContract", async accounts => {
+contract('TicketContract', async accounts => {
   let contractOwner, alice, bob;
   let contract;
   const data = web3.utils.fromAscii('additional data');
@@ -19,96 +19,97 @@ contract("TicketContract", async accounts => {
   });
 
 
-  it("should be able to create a new Token show", async () => {
+  it('should be able to create a new Token show', async () => {
     // act
-    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
+    const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
 
     // assert
     assert.equal(await contract.balanceOf(contractOwner, id), 100);
   });
 
-  it("should be fail on creating new token when has not ownership", async () => {
+  it('should be fail on creating new token when has not ownership', async () => {
     // act
     try {
-      const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, alice);
+      const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, alice);
     } catch (error) {
 
       //assert
-      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Ownable: caller is not the owner -- Reason given: Ownable: caller is not the owner.");
+      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Ownable: caller is not the owner -- Reason given: Ownable: caller is not the owner.');
     }
   });
 
-  it("should be able to sell tokens", async () => {
+  it('should be able to sell tokens', async () => {
     // arrange
-    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
+    const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
 
     // act
-    await contract.buy(id, 4, data, { from: alice, value: 20 });
+    await contract.buy(id, 4, data, { from: alice, value: web3.utils.toWei('0.2') });
 
     // assert
     assert.equal(await contract.balanceOf(alice, id), 4);
   });
 
-  it("should fail on selling when contract is paused", async () => {
+  it('should fail on selling when contract is paused', async () => {
     // arrange
-    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
+    const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
 
     // act
     await contract.pause();
     try {
-      await contract.buy(id, 4, data, { from: alice, value: 20 });
+      await contract.buy(id, 4, data, { from: alice, value: web3.utils.toWei('0.2') });
     } catch (error) {
 
       //assert
-      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Pausable: paused -- Reason given: Pausable: paused.");
+      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Pausable: paused -- Reason given: Pausable: paused.');
     }
   });
 
-  it("should fail on selling when not enough minted tickets", async () => {
+  it('should fail on selling when not enough minted tickets', async () => {
     // arrange
-    const id = await createTicket('Cinema Paradiso DEC 4', 5, 2, 4, contractOwner);
+    const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 2, 4, contractOwner);
 
     // act
     try {
-      await contract.buy(id, 4, data, { from: alice, value: 20 });
+      await contract.buy(id, 4, data, { from: alice, value: web3.utils.toWei('0.2') });
     } catch (error) {
 
       //assert
-      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Not enough tickets -- Reason given: Not enough tickets.");
+      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Not enough tickets -- Reason given: Not enough tickets.');
     }
   });
 
-  it("should fail on selling when trying to buy more than allowed", async () => {
+  it('should fail on selling when trying to buy more than allowed', async () => {
     // arrange
-    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
+    const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
 
     // act
     try {
-      await contract.buy(id, 8, data, { from: alice, value: 40 });
+      await contract.buy(id, 8, data, { from: alice, value: web3.utils.toWei('0.4') });
     } catch (error) {
 
       //assert
-      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Max ammount per person reached -- Reason given: Max ammount per person reached.");
+      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Max ammount per person reached -- Reason given: Max ammount per person reached.');
     }
   });
 
-  it("should fail on selling when trying to buy without enough funds", async () => {
+  it('should fail on selling when trying to buy without enough funds', async () => {
     // arrange
-    const id = await createTicket('Cinema Paradiso DEC 4', 5, 100, 4, contractOwner);
+    const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
 
     // act
     try {
-      await contract.buy(id, 2, data, { from: alice, value: 2 });
+      await contract.buy(id, 2, data, { from: alice, value: web3.utils.toWei('0.02') });
     } catch (error) {
 
       //assert
-      assert.equal(error.message, "Returned error: VM Exception while processing transaction: revert Incorrect amount -- Reason given: Incorrect amount.");
+      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Incorrect amount -- Reason given: Incorrect amount.');
     }
   });
 
   async function createTicket(name, price, amount, maxSellPerPerson, owner) {
-    await contract.create(name, price, amount, maxSellPerPerson, data, { from: owner });
-    const idJustCreated = await contract.nonce();
+    const showTime = '11/26/2027 5:35 PM';
+    await contract.create(name, price, amount, showTime, maxSellPerPerson, data, { from: owner });
+    const idJustCreated = await contract.tokenIdCounter();
     return idJustCreated;
   }
 });

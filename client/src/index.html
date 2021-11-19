@@ -1,32 +1,139 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Hello, world!</title>
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-    <div id="main"></div>
-    <!-- Optional JavaScript; choose one of the two! -->
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <title>Hello, world!</title>
+</head>
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<body>
+  <h1>Hello, world!</h1>
+  <div id="main">
 
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
+    <button class="enableEthereumButton btn btn-primary">Enable Ethereum</button>
+    <h2>Account: <span class="showAccount"></span></h2>
+    <h3>Create show</h3>
+    <form id="add-show">
+      <fieldset>
+        <div class="container px-5 my-7">
+          <form id="contactForm" data-sb-form-api-token="API_TOKEN">
+            <div class="form-floating mb-3">
+              <input class="form-control" id="showName" type="text" placeholder="Show name"
+                data-sb-validations="required" />
+              <label for="showName">Show name</label>
+              <div class="invalid-feedback" data-sb-feedback="showName:required">Show name is required.</div>
+            </div>
+            <div class="form-floating mb-3">
+              <input class="form-control" id="showPriceWei" type="text" placeholder="Show price (wei)"
+                data-sb-validations="required" />
+              <label for="showPriceWei">Show price (wei)</label>
+              <div class="invalid-feedback" data-sb-feedback="showPriceWei:required">Show price (wei) is required.</div>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input class="form-control" id="showTime"  placeholder="ShowTime"
+                data-sb-validations="required" type="datetime" />
+              <label for="showTime">ShowTime</label>
+              <div class="invalid-feedback" data-sb-feedback="showTime:required">ShowTime is required.</div>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input class="form-control" id="initialSupply"  placeholder="Initial supply"
+                data-sb-validations="required" type="number" />
+              <label for="initialSupply">Initial supply</label>
+              <div class="invalid-feedback" data-sb-feedback="initialSupply:required">Initial supply is required.</div>
+            </div>
+            <div class="form-floating mb-3">
+              <input class="form-control" id="maxSellPerPerson" type="number" placeholder="maxSellPerPerson"
+                data-sb-validations="required" />
+              <label for="maxSellPerPerson">maxSellPerPerson</label>
+              <div class="invalid-feedback" data-sb-feedback="maxSellPerPerson:required">maxSellPerPerson is required.
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <button class="createShow btn btn-primary">create</button>
+            </div>
+          </form>
+        </div>
+
+
+
+      </fieldset>
+    </form>
+  </div>
+  <hr />
+  <div id="list">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Show name</th>
+          <th scope="col">Show price (wei)</th>
+          <th scope="col">maxSellPerPerson</th>
+          <th scope="col">Created at</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+          <td>@mdo</td>
+          <td><a>buy</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<hr />
+  <div id="list-owned">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Show name</th>
+          <th scope="col">Show price (wei)</th>
+          <th scope="col">maxSellPerPerson</th>
+          <th scope="col">Created at</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+          <td>@mdo</td>
+          <td><a>buy</a></td>
+        </tr>
+      </tbody>
+  </div>
+
+
+
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     -->
+  <script src="./app.js"></script>
+</body>
 
-    <script src="./app.js" ></script>
-
-
-
-  </body>
 </html>
