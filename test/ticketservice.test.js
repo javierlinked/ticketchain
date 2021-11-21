@@ -1,5 +1,18 @@
 const TicketContract = artifacts.require('TicketContract');
 
+/**
+ *  TODO: 
+ *    - CONSTANTS ERRORS ETC
+ *    - HELPERS
+ *  
+ * 
+ * const getErrorObj = (obj = {}) => {
+  const txHash = Object.keys(obj)[0];
+  return obj[txHash];
+};
+ */
+
+
 /*
  * uncomment accounts to access the test accounts made available by the
  * Ethereum client
@@ -108,8 +121,13 @@ contract('TicketContract', async accounts => {
 
   async function createTicket(name, price, amount, maxSellPerPerson, owner) {
     const showTime = '11/26/2027 5:35 PM';
-    await contract.create(name, price, amount, showTime, maxSellPerPerson, data, { from: owner });
-    const idJustCreated = await contract.tokenIdCounter();
-    return idJustCreated;
+    let nonce = await contract.nonce();
+    const newId = nonce.toNumber() + 1;
+    await contract.create( name, price, amount, showTime, maxSellPerPerson, data, { from: owner });
+   // console.log('NEW----> ', await contract.tickets(nonce));
+
+    //console.log('NEW----> ', await contract.tokenIds());
+   // tokenIds
+    return newId;
   }
 });

@@ -5,28 +5,25 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 
-
-// import "base64-sol/base64.sol";
 
 /// @custom:security-contact @javierlinked
 contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
-    using Counters for Counters.Counter;
-    Counters.Counter public tokenIdCounter;
+    uint public nonce;
+    uint[] public tokenIds;
 
     struct Ticket {
+        uint id;
         string name;
         uint price; // in gwei
         string showTime;
         uint maxSellPerPerson;
     }
 
-    mapping(uint256 => Ticket) public tickets;
+    mapping(uint => Ticket) public tickets;
 
     event TicketCreated(
-        uint256 indexed id,
+        uint indexed id,
         address indexed minter,
         string indexed name,
         uint price,
@@ -35,19 +32,19 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
     );
 
     event TicketSold(
-        uint256 indexed id,
-        address indexed from,
-        address indexed to,
+        uint indexed id,
+        address indexed seller,
+        address indexed buyer,
         uint amount
     );
 
-    modifier paidEnough(uint amount, uint256 id) {
+    modifier paidExactly(uint amount, uint id) {
         uint total = amount * tickets[id].price;
-        require(total <= msg.value, "Incorrect amount");
+        require(total == msg.value, "Incorrect amount");
         _;
     }
 
-    modifier allowedSell(uint amount, uint256 id) {
+    modifier allowedSell(uint amount, uint id) {
         require(amount > 0, "Amount must bigger than 0");
         require(balanceOf(owner(), id) >= amount, "Not enough tickets");
         require(
@@ -57,12 +54,14 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         _;
     }
 
-    modifier validate(uint256 id) {
+    modifier validate(uint id) {
         require(tickets[id].price != 0, "Ticket does not exist");
         _;
     }
 
-    constructor() ERC1155("") {}
+    constructor() ERC1155("") {
+        nonce = 0;
+    }
 
     function create(
         string memory name,
@@ -73,23 +72,23 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         bytes memory data
     ) public onlyOwner whenNotPaused {
         address owner = msg.sender;
-        tokenIdCounter.increment();
-        Ticket memory newTicket = Ticket(name, price, showTime, maxSellPerPerson);
-        uint256 newId = tokenIdCounter.current();
+        uint newId = ++nonce;
+        Ticket memory newTicket = Ticket(newId, name, price, showTime, maxSellPerPerson);
         tickets[newId] = newTicket;
+        tokenIds.push(newId);
         _mint(owner, newId, amount, data);
         emit TicketCreated(newId, owner, name, price, amount, maxSellPerPerson);
     }
 
     function buy(
-        uint256 id,
+        uint id,
         uint amount,
         bytes memory data
     )
         public
         payable
         allowedSell(amount, id)
-        paidEnough(amount, id)
+        paidExactly(amount, id)
         validate(id)
         whenNotPaused
     {
@@ -103,9 +102,12 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
 
     function burn(
         address account,
-        uint256 id,
+        uint id,
         uint amount
-    ) public override onlyOwner whenNotPaused {
+    ) public override
+    /**   onlyOwner ???*/ 
+    whenNotPaused {
+        // NOTE:  to myself, not related to _balances[][] but to existence of tokens in the contract
         _burn(account, id, amount);
     }
 

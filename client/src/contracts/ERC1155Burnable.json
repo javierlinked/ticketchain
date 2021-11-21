@@ -386,7 +386,7 @@
         1508
       ],
       "ERC165": [
-        2191
+        1914
       ],
       "IERC1155": [
         1398
@@ -398,7 +398,7 @@
         1439
       ],
       "IERC165": [
-        2203
+        1926
       ]
     },
     "id": 1509,
@@ -460,8 +460,8 @@
           1276,
           1571,
           1398,
-          2191,
-          2203,
+          1914,
+          1926,
           1890
         ],
         "name": "ERC1155Burnable",
@@ -1362,7 +1362,7 @@
         1508
       ],
       "ERC165": [
-        2191
+        1914
       ],
       "IERC1155": [
         1398
@@ -1374,7 +1374,7 @@
         1439
       ],
       "IERC165": [
-        2203
+        1926
       ]
     },
     "id": 1509,
@@ -1436,8 +1436,8 @@
           1276,
           1571,
           1398,
-          2191,
-          2203,
+          1914,
+          1926,
           1890
         ],
         "name": "ERC1155Burnable",
@@ -2328,7 +2328,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-19T17:30:07.969Z",
+  "updatedAt": "2021-11-21T16:57:19.062Z",
   "devdoc": {
     "details": "Extension of {ERC1155} that allows token holders to destroy both their own tokens and those that they have been approved to use. _Available since v3.1._",
     "kind": "dev",

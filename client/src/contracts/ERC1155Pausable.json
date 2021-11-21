@@ -379,7 +379,7 @@
         1556
       ],
       "ERC165": [
-        2191
+        1914
       ],
       "IERC1155": [
         1398
@@ -391,7 +391,7 @@
         1439
       ],
       "IERC165": [
-        2203
+        1926
       ],
       "Pausable": [
         195
@@ -481,8 +481,8 @@
           1276,
           1571,
           1398,
-          2191,
-          2203,
+          1914,
+          1926,
           1890
         ],
         "name": "ERC1155Pausable",
@@ -1002,7 +1002,7 @@
         1556
       ],
       "ERC165": [
-        2191
+        1914
       ],
       "IERC1155": [
         1398
@@ -1014,7 +1014,7 @@
         1439
       ],
       "IERC165": [
-        2203
+        1926
       ],
       "Pausable": [
         195
@@ -1104,8 +1104,8 @@
           1276,
           1571,
           1398,
-          2191,
-          2203,
+          1914,
+          1926,
           1890
         ],
         "name": "ERC1155Pausable",
@@ -1615,7 +1615,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-19T17:30:07.970Z",
+  "updatedAt": "2021-11-21T16:57:19.084Z",
   "devdoc": {
     "details": "ERC1155 token with pausable token transfers, minting and burning. Useful for scenarios such as preventing trades until the end of an evaluation period, or having an emergency switch for freezing all token transfers in the event of a large bug. _Available since v3.1._",
     "kind": "dev",
