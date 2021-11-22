@@ -11,7 +11,8 @@ import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
 contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
     uint public nonce;
     uint[] public tokenIds;
-
+    uint public tokenIdsLength;
+    
     struct Ticket {
         uint id;
         string name;
@@ -71,11 +72,13 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint maxSellPerPerson,
         bytes memory data
     ) public onlyOwner whenNotPaused {
-        address owner = msg.sender;
         uint newId = ++nonce;
+
+        address owner = msg.sender;
         Ticket memory newTicket = Ticket(newId, name, price, showTime, maxSellPerPerson);
-        tickets[newId] = newTicket;
         tokenIds.push(newId);
+        tokenIdsLength = tokenIds.length;
+        tickets[newId] = newTicket;
         _mint(owner, newId, amount, data);
         emit TicketCreated(newId, owner, name, price, amount, maxSellPerPerson);
     }

@@ -3,68 +3,60 @@
 /// <reference types='jQuery' />
 /// <reference types='web3' />
 
-const contractAddress = '0x03DCaFeEF7CA5EC547EdCd276CEF27B0275EA5Fc';
-const contractOwner = '0x39d5a03d6ff8186bd40531fa5bda2c99d6a84210';
+const contractAddress = '0x6DbC09a28da5d48f04776CEBEB9B01F5ceb2b48c';
+const contractOwner = '0x94DCCcDA7409eCec1b244158b98f1Fb9944100B5';
 
 /**
  * Extraer error del smart contract y mapear con constantes 
  * 
- * 
+ * Mejorar logica de contractAddress y contractOwner
  * 
  */
 
 
-
-
 let ethereum = window['ethereum'];
-// @ts-ignore
-let web3 = new Web3(ethereum);
+
+let web3, account, data, json, constractInstance;
 
 async function getJson(file) {
   let response = await fetch(file);
   let data = await response.json()
   return data;
 }
-let json;
 
-let account;
-const data = '0x6164646974696f6e616c2064617461';
-getJson('./contracts/TicketContract.json').then(data => json = data);
+async function init() {
+  // @ts-ignore
+  web3 = new Web3(ethereum);
+  await getAccount();
+  await getJson('./contracts/TicketContract.json').then(data => json = data);
+  data = '0x6164646974696f6e616c2064617461';
+  constractInstance = new web3.eth.Contract(json.abi, contractAddress);
+  constractInstance.setProvider(ethereum);
+}
 
-$((doument) => {
-
-  $('.enableEthereumButton').on('click', getAccount);
-
+$(async (doument) => {
+  $('.enableEthereumButton').on('click', getTokens);
   $('.createButton').on('click', create);
-
   $('.buyButton').on('click', buy);
-
-
+  await init();
 });
 
-
 ethereum.on('accountsChanged', async (accounts) => {
-  // Time to reload your interface with accounts[0]!
-
-  await getAccount();
-  // toLowerCase()
   showPanels();
-
 })
 
-function showPanels(){
-  if (account === contractOwner) {
+function showPanels() {
+  // TODO: search some library
+  if (account.toLowerCase() === contractOwner.toLowerCase()) {
     $('#ownerView').show();
     $('#buyerView').hide();
   } else {
     $('#ownerView').hide();
     $('#buyerView').show();
   }
-  console.log(account);
 }
 
 ethereum.on('chainChanged', (networkId) => {
-  // Time to reload your interface with the new networkId
   console.log(networkId);
 })
 
@@ -79,16 +71,16 @@ async function getAccount() {
 async function create() {
   const showName = $('#showName').val();
   const showPriceWei = $('#showPriceWei').val();
-  const showTime = $('#showTime').val();
   const initialSupply = $('#initialSupply').val();
+  const showTime = $('#showTime').val();
+
   const maxSellPerPerson = $('#maxSellPerPerson').val();
 
   const price = web3.utils.toWei(showPriceWei);
 
   try {
-    const ticketContractWeb3 = new web3.eth.Contract(json.abi, contractAddress);
-    ticketContractWeb3.setProvider(ethereum);
-    const tx = await ticketContractWeb3.methods.create(showName, price, initialSupply, maxSellPerPerson, showTime, data).send({ from: account });
+
+    const tx = await constractInstance.methods.create(showName, price, initialSupply, showTime, maxSellPerPerson, data).send({ from: account });
     console.log(tx.transactionHash);
   } catch (error) {
     console.log(error);
@@ -104,10 +96,7 @@ async function buy() {
 
     const price = web3.utils.toWei(priceWei);
 
-    const ticketContractWeb3 = new web3.eth.Contract(json.abi, contractAddress);
-    ticketContractWeb3.setProvider(ethereum);
-
-    const tx = await ticketContractWeb3.methods
+    const tx = await constractInstance.methods
       .buy(id, amount, data)
       .send({ from: account, value: price });
 
@@ -116,5 +105,22 @@ async function buy() {
     console.log(error);
     debugger;
   }
+}
+
+async function getTokens() {
+  try {
+    const tokenIdsLength = await constractInstance.methods.tokenIdsLength().call();
+    const indexes = [...Array(parseInt(tokenIdsLength)).keys()];
+    const ids = await Promise.all(indexes.map((_, i) => constractInstance.methods.tokenIds(i).call()));
+    const arr = await Promise.all(ids.map((id) => constractInstance.methods.tickets(id).call()));
+    console.log(arr);
+    return arr;
+  } catch (error) {
+    console.log(error);
+    debugger;
+  }
+
 
 }
+
+

@@ -119,15 +119,29 @@ contract('TicketContract', async accounts => {
     }
   });
 
+  it('test counters', async () => {
+    // arrange
+    const id1 = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
+    const id2 = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
+    const id3 = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
+    const expected = [id1, id2, id3];
+
+    // act
+    const tokenIdsLengthBN = await contract.tokenIdsLength();
+    const idBNs = await Promise.all(Array.from(Array(tokenIdsLengthBN.toNumber())).map((_, i) => contract.tokenIds(i)));
+    const ids = idBNs.map((n) => n.toNumber());
+
+    //assert
+    assert.equal(tokenIdsLengthBN.toNumber(), 3);
+    assert.deepEqual(expected, ids);
+  });
+
+
   async function createTicket(name, price, amount, maxSellPerPerson, owner) {
     const showTime = '11/26/2027 5:35 PM';
     let nonce = await contract.nonce();
     const newId = nonce.toNumber() + 1;
-    await contract.create( name, price, amount, showTime, maxSellPerPerson, data, { from: owner });
-   // console.log('NEW----> ', await contract.tickets(nonce));
-
-    //console.log('NEW----> ', await contract.tokenIds());
-   // tokenIds
+    await contract.create(name, price, amount, showTime, maxSellPerPerson, data, { from: owner });
     return newId;
   }
 });
