@@ -16,7 +16,7 @@ const contractOwner = '0x94DCCcDA7409eCec1b244158b98f1Fb9944100B5';
 
 let ethereum = window['ethereum'];
 
-let web3, account, data, json, constractInstance;
+let web3, account, data, json, constractInstance, shows;
 
 async function getJson(file) {
   let response = await fetch(file);
@@ -33,11 +33,13 @@ async function init() {
   constractInstance = new web3.eth.Contract(json.abi, contractAddress);
   constractInstance.setProvider(ethereum);
 }
+// $(document).ready(function () {
+//   bindActions();
+// })
 
 $(async (doument) => {
   $('.enableEthereumButton').on('click', getTokens);
   $('.createButton').on('click', create);
-  $('.buyButton').on('click', buy);
   await init();
 });
 
@@ -88,17 +90,16 @@ async function create() {
   }
 }
 
-async function buy() {
+async function buy(id, amount, price) {
+  alert('buy' + id);
+  alert('buy' + amount);
+  alert('buy' + price);
   try {
-    const id = $('#id').val();
-    const amount = $('#amount').val();
-    const priceWei = $('#priceWei').val();
-
-    const price = web3.utils.toWei(priceWei);
+    const value = amount * price;
 
     const tx = await constractInstance.methods
       .buy(id, amount, data)
-      .send({ from: account, value: price });
+      .send({ from: account, value });
 
     console.log(tx.transactionHash);
   } catch (error) {
@@ -113,14 +114,69 @@ async function getTokens() {
     const indexes = [...Array(parseInt(tokenIdsLength)).keys()];
     const ids = await Promise.all(indexes.map((_, i) => constractInstance.methods.tokenIds(i).call()));
     const arr = await Promise.all(ids.map((id) => constractInstance.methods.tickets(id).call()));
-    console.log(arr);
-    return arr;
+
+    shows = arr.map((t) => {
+      delete t['0'];
+      delete t['1'];
+      delete t['2'];
+      delete t['3'];
+      delete t['4'];
+      //  t.price = web3.utils.toWei(t.price);
+      return t;
+    });
+
+    const table = makeTableHtml(shows);
+    // document.getElementById('tockentList').insertAdjacentHTML('beforeend', table);
+    document.getElementById('tockentList').innerHTML += table;
+    bindActions();
+    return shows;
   } catch (error) {
     console.log(error);
     debugger;
   }
+}
 
+function makeTableHtml(arr) {
 
+  let table = [];
+  let top_row = [];
+  let rows = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    let cells = [];
+
+    for (let property in arr[i]) {
+      if (top_row.length < Object.keys(arr[i]).length) {
+        top_row.push(`<th scope="col">${property}</th>`);
+      }
+      if (arr[i][property] === null) {
+        cells.push(`<td>${null}</td>`);
+      } else {
+        cells.push(`<td>${arr[i][property]}</td>`);
+      }
+    }
+    cells.push(`<td><input type="number" id="amount-${arr[i]['id']}" class="form-control" placeholder="amount"></input></td>`);
+
+    cells.push(`<td><button id="buy-${arr[i]['id']}" class="btn btn-primary"   >Buy</button></td>`);
+
+    rows.push(`<tr>${cells.join("")}</tr>`);
+
+  }
+
+  table.push(`<table class="table card-table table-striped">`);
+  table.push(`<thead>${top_row.join("")}</thead>`);
+  table.push(`<tbody>${rows.join("")}<tbody>`);
+  table.push("</table>");
+  return table.join("");
 }
 
 
+
+function bindActions() {
+  for (const show of shows) {
+    $('#buy-' + show.id).on('click', function () {
+      var ammount = $(this).closest('tr').find('#amount-' + show.id).val();
+      buy(show.id, ammount, show.price);
+    })
+  }
+}
