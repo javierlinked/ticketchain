@@ -1,18 +1,5 @@
 const TicketContract = artifacts.require('TicketContract');
 
-/**
- *  TODO: 
- *    - CONSTANTS ERRORS ETC
- *    - HELPERS
- *  
- * 
- * const getErrorObj = (obj = {}) => {
-  const txHash = Object.keys(obj)[0];
-  return obj[txHash];
-};
- */
-
-
 /*
  * uncomment accounts to access the test accounts made available by the
  * Ethereum client
@@ -22,16 +9,15 @@ contract('TicketContract', async accounts => {
   let contractOwner, alice, bob;
   let contract;
   const data = web3.utils.fromAscii('additional data');
-  // 0x6164646974696f6e616c2064617461
 
   beforeEach(async () => {
     [contractOwner, alice, bob] = accounts;
     contract = await TicketContract.new();
-    // console.log('contractOwner', await web3.eth.getBalance(  contractOwner));
-    // console.log('alice', await web3.eth.getBalance( alice));
   });
 
-
+  /**
+   * tests a contract is minted and added to owner's balance
+   */
   it('should be able to create a new Token show', async () => {
     // act
     const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
@@ -40,6 +26,9 @@ contract('TicketContract', async accounts => {
     assert.equal(await contract.balanceOf(contractOwner, id), 100);
   });
 
+  /**
+   * tests a contract cannot be minted if the account is not owner of the contract
+   */
   it('should be fail on creating new token when has not ownership', async () => {
     // act
     try {
@@ -51,6 +40,9 @@ contract('TicketContract', async accounts => {
     }
   });
 
+  /**
+   * Tests a token can be bought, and added to the buyer's balance
+   */
   it('should be able to sell tokens', async () => {
     // arrange
     const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
@@ -62,6 +54,10 @@ contract('TicketContract', async accounts => {
     assert.equal(await contract.balanceOf(alice, id), 4);
   });
 
+
+  /**
+   * Tests pausable pattern is honored
+   */
   it('should fail on selling when contract is paused', async () => {
     // arrange
     const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
@@ -77,6 +73,9 @@ contract('TicketContract', async accounts => {
     }
   });
 
+  /**
+   * Tests that total initialSupply of a token is honored
+   */
   it('should fail on selling when not enough minted tickets', async () => {
     // arrange
     const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 2, 4, contractOwner);
@@ -91,6 +90,9 @@ contract('TicketContract', async accounts => {
     }
   });
 
+  /**
+   * Tests that total maxSellPerPerson of a token is honored
+   */
   it('should fail on selling when trying to buy more than allowed', async () => {
     // arrange
     const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
@@ -105,6 +107,9 @@ contract('TicketContract', async accounts => {
     }
   });
 
+  /**
+   * Tests that total maxSellPerPerson of a token is honored including previous purchases
+   */
   it('should fail on selling when trying to buy more than allowed honoring previous transactions', async () => {
     // arrange
     const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
@@ -122,7 +127,9 @@ contract('TicketContract', async accounts => {
     }
   });
 
-
+  /**
+   * Tests buying is not possible when payment is incorrect
+   */
   it('should fail on selling when trying to buy without enough funds', async () => {
     // arrange
     const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
@@ -137,6 +144,9 @@ contract('TicketContract', async accounts => {
     }
   });
 
+  /**
+   * tests counters that will be used in token's list
+   */
   it('test counters', async () => {
     // arrange
     const id1 = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
@@ -154,7 +164,9 @@ contract('TicketContract', async accounts => {
     assert.deepEqual(expected, ids);
   });
 
-
+  /**
+   * helper
+   */
   async function createTicket(name, price, amount, maxSellPerPerson, owner) {
     const infoUrl = 'someUrl';
     const imageUrl = 'otherUrl';
