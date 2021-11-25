@@ -6,9 +6,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
 
-
+/// @title Contract for modeling ticket sales on ERC1155 tokens
+/// @author Javier Rojo
+/// @notice Allows an organizer to publish events, and other users to buy tickets, more for the future
 /// @custom:security-contact @javierlinked
 contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
+
+    /// @dev variariables and counters used by the contract and by the frontend, in order to crate a list
     uint public nonce;
     uint[] public tokenIds;
     uint public tokenIdsLength;
@@ -16,14 +20,21 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
     struct Ticket {
         uint id;
         string name;
-        uint price; // in gwei
-        uint maxSellPerPerson;
-        string infoUrl;
-        string imageUrl;
+        uint price;     // in gwei
+        uint maxSellPerPerson;  // max number of tickets that can be kept per person
+        string infoUrl; // this is to be removed and kept off-chain
+        string imageUrl; // this is to be removed and kept off-chain
     }
 
     mapping(uint => Ticket) public tickets;
 
+    /// @notice This event is emmited when a ticket is created
+    /// @param id the id of the ticket
+    /// @param minter address of the minter
+    /// @param name name of the ticket
+    /// @param price price of the ticket 
+    /// @param amount total supply of tickets
+    /// @param maxSellPerPerson the maximum number of tickets that can be hold per person
     event TicketCreated(
         uint indexed id,
         address indexed minter,
@@ -33,6 +44,11 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint maxSellPerPerson
     );
 
+    //// @notice this event is emmited when a ticket is sold
+    /// @param id the id of the ticket
+    /// @param seller the address of the seller
+    /// @param buyer the address of the buyer
+    /// @param amount the amount of tickets sold
     event TicketSold(
         uint indexed id,
         address indexed seller,
@@ -40,12 +56,14 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint amount
     );
 
+    /// @notice this verifies the payment is exact or cancels the transaction
     modifier paidExactly(uint amount, uint id) {
         uint total = amount * tickets[id].price;
         require(total == msg.value, "Incorrect amount");
         _;
     }
 
+    /// @notice this verifies the minter has enough tickets to sell
     modifier allowedSell(uint amount, uint id) {
         require(amount > 0, "Amount must bigger than 0");
         require(balanceOf(owner(), id) >= amount, "Not enough tickets");
@@ -61,10 +79,20 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         _;
     }
 
+    /// @notice constructor is trivial, but can be used to set parameters on deployment
     constructor() ERC1155("") {
         nonce = 0;
     }
 
+    /// @notice Crates a ticket
+    /// @dev After validations and internal variable set, delegates to the ERC1155 contract and emmits the event
+    /// @param name name of the ticket
+    /// @param price price of the ticket 
+    /// @param amount total supply of tickets
+    /// @param maxSellPerPerson the maximum number of tickets that can be hold per person
+    /// @param infoUrl extra info about the ticket
+    /// @param imageUrl image of the ticket
+    /// @param data data required by ERC1155
     function create(
         string memory name,
         uint price,
@@ -85,6 +113,12 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         emit TicketCreated(newId, owner, name, price, amount, maxSellPerPerson);
     }
 
+    /// @notice sells a ticket
+    /// @dev It makes verifications, then transfers payment, later delegates to the ERC1155 transfer of the token
+    /// and finally emits the event
+    /// @param id token id
+    /// @param amount amount of tickets to sell
+    /// @param data data required by ERC1155
     function buy(
         uint id,
         uint amount,
@@ -105,6 +139,8 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         emit TicketSold(id, owner, buyer, amount);
     }
 
+    /// @notice burns a token. This funtion is used when the ticket is USED.
+    /// @dev after verifications delegates to the ERC1155 burn of the token
     function burn(
         address account,
         uint id,
