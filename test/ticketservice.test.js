@@ -105,6 +105,24 @@ contract('TicketContract', async accounts => {
     }
   });
 
+  it('should fail on selling when trying to buy more than allowed honoring previous transactions', async () => {
+    // arrange
+    const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
+
+    // act
+    try {
+      // this should work
+      await contract.buy(id, 2, data, { from: alice, value: web3.utils.toWei('0.1') });
+      // this should fail
+      await contract.buy(id, 3, data, { from: alice, value: web3.utils.toWei('0.15') });
+    } catch (error) {
+
+      //assert
+      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Max ammount per person reached -- Reason given: Max ammount per person reached.');
+    }
+  });
+
+
   it('should fail on selling when trying to buy without enough funds', async () => {
     // arrange
     const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 100, 4, contractOwner);
@@ -138,10 +156,11 @@ contract('TicketContract', async accounts => {
 
 
   async function createTicket(name, price, amount, maxSellPerPerson, owner) {
-    const showTime = '11/26/2027 5:35 PM';
+    const infoUrl = 'someUrl';
+    const imageUrl = 'otherUrl';
     let nonce = await contract.nonce();
     const newId = nonce.toNumber() + 1;
-    await contract.create(name, price, amount, showTime, maxSellPerPerson, data, { from: owner });
+    await contract.create(name, price, amount, maxSellPerPerson, infoUrl, imageUrl, data, { from: owner });
     return newId;
   }
 });

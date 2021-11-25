@@ -3,13 +3,15 @@
 /// <reference types='jQuery' />
 /// <reference types='web3' />
 
-const contractAddress = '0x6DbC09a28da5d48f04776CEBEB9B01F5ceb2b48c';
-const contractOwner = '0x94DCCcDA7409eCec1b244158b98f1Fb9944100B5';
+const contractAddress = '0x996906687e2443Fb8F5601C5cad8E27119d72442';
+const contractOwner = '0xCC38Bb4ED8ee1ed84220581dB888271C1B945B27';
 
 const rinkeby = '4';
 const ganache = '5777'; // 5777
+const data = '0x6164646974696f6e616c2064617461';
+
 let ethereum = window['ethereum'];
-let web3, account, data, json, constractInstance, shows, tokens;
+let web3, actualAccount, json, contractInstance, shows, tokens, txStatus;
 
 /**
  * Extraer error del smart contract y mapear con constantes 
@@ -17,7 +19,6 @@ let web3, account, data, json, constractInstance, shows, tokens;
  * 
  * Mejorar logica de contractAddress y contractOwner
  * 
- * verificar que funcione el cambio de cuenta / pantallas
  * 
  * Falta: mostrar tickets en wallt
  * 
@@ -38,7 +39,7 @@ async function getJson(file) {
 $(async (doument) => {
   await init();
   $('.enableEthereumButton').on('click', getAccountData);
-  $('.createButton').on('click', createTocken);
+  $('.createButton').on('click', createToken);
 });
 
 async function init() {
@@ -46,21 +47,21 @@ async function init() {
   $('#buyerView').hide();
   $('#noWallet').hide();
   $('#walletData').hide();
+  txStatus = $('#txStatus');
   if (!await getWeb3()) {
     $('#noWallet').show();
   } else {
     console.log(isAllowedNetwork(ethereum.networkVersion));
     if (isAllowedNetwork(ethereum.networkVersion)) {
-      await getJson('./contracts/TicketContract.json').then(data => json = data);
-      data = '0x6164646974696f6e616c2064617461';
-      constractInstance = new web3.eth.Contract(json.abi, contractAddress);
-      constractInstance.setProvider(ethereum);
+      await getJson('./contracts/TicketContract.json').then(d => json = d);
+      contractInstance = new web3.eth.Contract(json.abi, contractAddress);
+      contractInstance.setProvider(ethereum);
       $('#walletData').show();
       await getAccountData();
       await togglePanels();
     } else {
       alert('Please connect to the Rinkeby or localhost node');
-    } 
+    }
   }
 }
 
@@ -68,13 +69,13 @@ async function init() {
  * logic for showirng right panel according to account
  */
 async function togglePanels() {
-  if (account.toLowerCase() === contractOwner.toLowerCase()) {
+  if (actualAccount.toLowerCase() === contractOwner.toLowerCase()) {
     $('#ownerView').show();
     $('#buyerView').hide();
   } else {
     tokens = await getTokens();
     const table = makeTableHtml(tokens);
-    document.getElementById('tockentList').innerHTML = table;
+    document.getElementById('tokentList').innerHTML = table;
     bindActions();
     $('#ownerView').hide();
     $('#buyerView').show();
@@ -86,38 +87,48 @@ async function togglePanels() {
  */
 async function getAccountData() {
   const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-  account = accounts[0];
-  $('.accountLabel').text(account);
-  const balance = await web3.eth.getBalance(account);
+  actualAccount = accounts[0];
+  $('.accountLabel').text(actualAccount);
+  const balance = await web3.eth.getBalance(actualAccount);
   $('.accountBalance').text(formatEth(balance));
 }
 
-async function createTocken() {
+/**
+ * Creates a tocken when address is owner
+ */
+async function createToken() {
   const showName = $('#showName').val();
   const showPriceWei = $('#showPriceWei').val();
   const initialSupply = $('#initialSupply').val();
-  const showTime = $('#showTime').val();
   const maxSellPerPerson = $('#maxSellPerPerson').val();
+  const infoUrl = $('#infoUrl').val();
+  const imageUrl = $('#imageUrl').val();
   const price = web3.utils.toWei(showPriceWei);
   try {
-    const tx = await constractInstance.methods.create(showName, price, initialSupply, showTime, maxSellPerPerson, data).send({ from: account });
+    const tx = await contractInstance.methods.create(showName, price, initialSupply, maxSellPerPerson, infoUrl, imageUrl, data).send({ from: actualAccount });
     console.log(tx.transactionHash);
   } catch (error) {
     console.log(error);
-    //  debugger;
+    txStatus.text(getErrorMessage(error));
   }
 }
 
-async function buyTocken(id, amount, price) {
+/**
+ * Buys a token for registered address
+ * @param {number} id 
+ * @param {number} amount 
+ * @param {number} price 
+ */
+async function buyToken(id, amount, price) {
   try {
-    const value = amount * price;
-    const tx = await constractInstance.methods
+    const total = amount * price;
+    const tx = await contractInstance.methods
       .buy(id, amount, data)
-      .send({ from: account, value });
-    console.log(tx.transactionHash);
+      .send({ from: actualAccount, value: web3.utils.toWei(total.toString()) });
+    txStatus.text(tx.transactionHash);
   } catch (error) {
     console.log(error);
-    //  debugger;
+    txStatus.text(getErrorMessage(error));
   }
 }
 
@@ -127,10 +138,10 @@ async function buyTocken(id, amount, price) {
  */
 async function getTokens() {
   try {
-    const tokenIdsLength = await constractInstance.methods.tokenIdsLength().call();
+    const tokenIdsLength = await contractInstance.methods.tokenIdsLength().call();
     const indexes = [...Array(parseInt(tokenIdsLength)).keys()];
-    const ids = await Promise.all(indexes.map((_, i) => constractInstance.methods.tokenIds(i).call()));
-    const arr = await Promise.all(ids.map((id) => constractInstance.methods.tickets(id).call()));
+    const ids = await Promise.all(indexes.map((_, i) => contractInstance.methods.tokenIds(i).call()));
+    const arr = await Promise.all(ids.map((id) => contractInstance.methods.tickets(id).call()));
     shows = arr.map((t) => {
       delete t['0'];
       delete t['1'];
@@ -143,7 +154,7 @@ async function getTokens() {
     return shows;
   } catch (error) {
     console.log(error);
-    //  debugger;
+    txStatus.text(getErrorMessage(error));
   }
 }
 
@@ -186,7 +197,8 @@ function bindActions() {
   for (const show of shows) {
     $('#buy-' + show.id).on('click', function () {
       var ammount = $(this).closest('tr').find('#amount-' + show.id).val();
-      buyTocken(show.id, ammount, show.price);
+      // @ts-ignore
+      buyToken(show.id, ammount, show.price);
     })
   }
 }
@@ -227,11 +239,7 @@ let isAllowedNetwork = (/** @type {string} */ networkId) => {
 }
 
 function handleNetworkChange(networkId) {
-
-  // if (!isAllowedNetwork(web3.utils.hexToNumberString(networkId))) {
-   // alert('Please connect to the Rinkeby or localhost node');
-    window.location.reload();
- // }
+  window.location.reload();
 }
 
 async function handleAccountChange(accounts) {
@@ -239,3 +247,16 @@ async function handleAccountChange(accounts) {
   togglePanels();
 }
 
+/**
+ * Parses error from Web3 call
+ * @param {any} error 
+ * @returns {string} error message
+ */
+const getErrorMessage = (error) => {
+  if (error?.code === 4001) {
+    return error.message;
+  }
+  const b = error.message.replace('[ethjs-query] while formatting outputs from RPC ', '');
+  const c = b.replaceAll('\'', '');
+  return JSON.parse(c)?.value?.data?.message;
+}

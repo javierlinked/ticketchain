@@ -17,8 +17,9 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint id;
         string name;
         uint price; // in gwei
-        string showTime;
         uint maxSellPerPerson;
+        string infoUrl;
+        string imageUrl;
     }
 
     mapping(uint => Ticket) public tickets;
@@ -68,14 +69,15 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         string memory name,
         uint price,
         uint amount,
-        string memory showTime,
         uint maxSellPerPerson,
+        string memory infoUrl,
+        string memory imageUrl,
         bytes memory data
     ) public onlyOwner whenNotPaused {
         uint newId = ++nonce;
 
         address owner = msg.sender;
-        Ticket memory newTicket = Ticket(newId, name, price, showTime, maxSellPerPerson);
+        Ticket memory newTicket = Ticket(newId, name, price, maxSellPerPerson, infoUrl, imageUrl);
         tokenIds.push(newId);
         tokenIdsLength = tokenIds.length;
         tickets[newId] = newTicket;
