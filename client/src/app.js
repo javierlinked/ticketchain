@@ -3,8 +3,11 @@
 /// <reference types='jQuery' />
 /// <reference types='web3' />
 
-const contractAddress = '0x996906687e2443Fb8F5601C5cad8E27119d72442';
-const contractOwner = '0xCC38Bb4ED8ee1ed84220581dB888271C1B945B27';
+
+console.log('App started');
+
+const contractAddress = '0xfF40c6fF2b939e0C62ae5a30551177A369655dfd';
+const contractOwner = '0x7c4993C8FBEDC13c1B9E564285e205D628521eaD';
 
 const rinkeby = '4';
 const ganache = '5777'; // 5777
@@ -14,15 +17,21 @@ let ethereum = window['ethereum'];
 let web3, actualAccount, json, contractInstance, shows, tokens, txStatus;
 
 /**
- * Extraer error del smart contract y mapear con constantes 
- * tambien las transacciones y limpiar formulario
- * 
+
+ * LIMPIAR FORMULARIO Y VERIFICAR OTROS ERRORES
+* limpiar label de status
+* pausable?
+eliminar boton de connect!
+* 
  * Mejorar logica de contractAddress y contractOwner
  * 
  * 
  * Falta: mostrar tickets en wallt
  * 
  *    para organizador igual ...
+ * 
+ *    mostrar div sin eventos cuando el array esta vacio
+ * 
  * 
  */
 

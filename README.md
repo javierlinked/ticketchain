@@ -40,6 +40,10 @@ address: `0x23db5E49544C5A5104316E6eE9734120F3eec357`
 
 #### Front end for the project (mvp & testing purposes)
 
+
+https://javierlinked-consensys.vercel.app/
+
+
 // TODO
 
 networks: {
