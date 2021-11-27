@@ -6,13 +6,8 @@
   "author": "@javierlinked <javierlinked@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.3.3",
+    "@openzeppelin/contracts": "^4.4.0",
     "@truffle/hdwallet-provider": "^1.7.0",
-    "base64-sol": "1.1.0",
     "dotenv": "^10.0.0"
-  },
-  "devDependencies": {
-    "@types/jquery": "^3.5.9",
-    "web3": "^1.6.1"
   }
 }

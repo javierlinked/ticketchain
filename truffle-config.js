@@ -10,7 +10,7 @@ const projectId = process.env.PROJECT_ID;
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
-  contracts_build_directory: path.join(__dirname, "client/src/contracts"),
+  contracts_build_directory: path.join(__dirname, "client/contracts"),
   compilers: {
     solc: {
       version: "0.8.10",

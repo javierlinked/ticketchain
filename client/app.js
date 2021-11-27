@@ -6,15 +6,12 @@
 
 console.log('App started');
 
-const contractAddress = '0xfF40c6fF2b939e0C62ae5a30551177A369655dfd';
-const contractOwner = '0x7c4993C8FBEDC13c1B9E564285e205D628521eaD';
-
 const rinkeby = '4';
 const ganache = '5777'; // 5777
 const data = '0x6164646974696f6e616c2064617461';
 
 let ethereum = window['ethereum'];
-let web3, actualAccount, json, contractInstance, shows, tokens, txStatus;
+let web3, actualAccount, json, contractInstance, shows, tokens, txStatus, contractAddress, contractOwner;
 
 /**
 
@@ -47,7 +44,7 @@ async function getJson(file) {
 
 $(async (doument) => {
   await init();
-  $('.enableEthereumButton').on('click', getAccountData);
+  $('.enableEthereumButton').on('click', loadAccountData);
   $('.createButton').on('click', createToken);
 });
 
@@ -60,13 +57,13 @@ async function init() {
   if (!await getWeb3()) {
     $('#noWallet').show();
   } else {
-    console.log(isAllowedNetwork(ethereum.networkVersion));
+    console.log(ethereum.networkVersion);
     if (isAllowedNetwork(ethereum.networkVersion)) {
       await getJson('./contracts/TicketContract.json').then(d => json = d);
       contractInstance = new web3.eth.Contract(json.abi, contractAddress);
       contractInstance.setProvider(ethereum);
       $('#walletData').show();
-      await getAccountData();
+      await loadAccountData();
       await togglePanels();
     } else {
       alert('Please connect to the Rinkeby or localhost node');
@@ -94,7 +91,7 @@ async function togglePanels() {
 /**
  * Gets the current account and balance from the ethereum node
  */
-async function getAccountData() {
+async function loadAccountData() {
   const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
   actualAccount = accounts[0];
   $('.accountLabel').text(actualAccount);
@@ -233,7 +230,9 @@ const getWeb3 = async () => {
     try {
       ethereum.on('accountsChanged', handleAccountChange);
       ethereum.on('chainChanged', handleNetworkChange);
-      await ethereum.request({ method: 'eth_requestAccounts' });
+      await loadAccountData();
+      await loadContractData();
+      
       return true;
     } catch (e) {
       // User denied access
@@ -252,7 +251,7 @@ function handleNetworkChange(networkId) {
 }
 
 async function handleAccountChange(accounts) {
-  await getAccountData();
+  await loadAccountData();
   togglePanels();
 }
 
@@ -268,4 +267,14 @@ const getErrorMessage = (error) => {
   const b = error.message.replace('[ethjs-query] while formatting outputs from RPC ', '');
   const c = b.replaceAll('\'', '');
   return JSON.parse(c)?.value?.data?.message;
+}
+
+async function loadContractData() {
+  try {
+    contractAddress = json.networks[ethereum.networkVersion].address;
+
+  } catch (error) {
+    console.log(error);
+
+  }
 }
