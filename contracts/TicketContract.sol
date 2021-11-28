@@ -23,7 +23,6 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint price;     // in gwei
         uint maxSellPerPerson;  // max number of tickets that can be kept per person
         string infoUrl; // this is to be removed and kept off-chain
-        string imageUrl; // this is to be removed and kept off-chain
     }
 
     mapping(uint => Ticket) public tickets;
@@ -67,8 +66,9 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
     modifier allowedSell(uint amount, uint id) {
         require(amount > 0, "Amount must bigger than 0");
         require(balanceOf(owner(), id) >= amount, "Not enough tickets");
+        uint buying = balanceOf(msg.sender, id) + amount;
         require(
-            amount <= tickets[id].maxSellPerPerson,
+            buying <= tickets[id].maxSellPerPerson,
             "Max ammount per person reached"
         );
         _;
@@ -91,7 +91,6 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
     /// @param amount total supply of tickets
     /// @param maxSellPerPerson the maximum number of tickets that can be hold per person
     /// @param infoUrl extra info about the ticket
-    /// @param imageUrl image of the ticket
     /// @param data data required by ERC1155
     function create(
         string memory name,
@@ -99,13 +98,12 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint amount,
         uint maxSellPerPerson,
         string memory infoUrl,
-        string memory imageUrl,
         bytes memory data
     ) public onlyOwner whenNotPaused {
         uint newId = ++nonce;
 
         address owner = msg.sender;
-        Ticket memory newTicket = Ticket(newId, name, price, maxSellPerPerson, infoUrl, imageUrl);
+        Ticket memory newTicket = Ticket(newId, name, price, maxSellPerPerson, infoUrl);
         tokenIds.push(newId);
         tokenIdsLength = tokenIds.length;
         tickets[newId] = newTicket;

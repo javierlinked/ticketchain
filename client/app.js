@@ -11,26 +11,8 @@ const ganache = '5777'; // 5777
 const data = '0x6164646974696f6e616c2064617461';
 
 let ethereum = window['ethereum'];
-let web3, actualAccount, json, contractInstance, shows, tokens, txStatus, contractAddress, contractOwner;
+let web3, actualAccount, json, contractInstance, shows, tokens, contractAddress;
 
-/**
-
- * LIMPIAR FORMULARIO Y VERIFICAR OTROS ERRORES
-* limpiar label de status
-* pausable?
-eliminar boton de connect!
-* 
- * Mejorar logica de contractAddress y contractOwner
- * 
- * 
- * Falta: mostrar tickets en wallt
- * 
- *    para organizador igual ...
- * 
- *    mostrar div sin eventos cuando el array esta vacio
- * 
- * 
- */
 
 /**
  * reads json file and returns promise
@@ -43,8 +25,8 @@ async function getJson(file) {
 }
 
 $(async (doument) => {
+  json = await getJson('./contracts/TicketContract.json');
   await init();
-  $('.enableEthereumButton').on('click', loadAccountData);
   $('.createButton').on('click', createToken);
 });
 
@@ -53,13 +35,11 @@ async function init() {
   $('#buyerView').hide();
   $('#noWallet').hide();
   $('#walletData').hide();
-  txStatus = $('#txStatus');
   if (!await getWeb3()) {
     $('#noWallet').show();
   } else {
     console.log(ethereum.networkVersion);
     if (isAllowedNetwork(ethereum.networkVersion)) {
-      await getJson('./contracts/TicketContract.json').then(d => json = d);
       contractInstance = new web3.eth.Contract(json.abi, contractAddress);
       contractInstance.setProvider(ethereum);
       $('#walletData').show();
@@ -75,6 +55,7 @@ async function init() {
  * logic for showirng right panel according to account
  */
 async function togglePanels() {
+  const contractOwner = await contractInstance.methods.owner().call();
   if (actualAccount.toLowerCase() === contractOwner.toLowerCase()) {
     $('#ownerView').show();
     $('#buyerView').hide();
@@ -108,15 +89,15 @@ async function createToken() {
   const initialSupply = $('#initialSupply').val();
   const maxSellPerPerson = $('#maxSellPerPerson').val();
   const infoUrl = $('#infoUrl').val();
-  const imageUrl = $('#imageUrl').val();
   const price = web3.utils.toWei(showPriceWei);
   try {
-    const tx = await contractInstance.methods.create(showName, price, initialSupply, maxSellPerPerson, infoUrl, imageUrl, data).send({ from: actualAccount });
-    console.log(tx.transactionHash);
+    const tx = await contractInstance.methods.create(showName, price, initialSupply, maxSellPerPerson, infoUrl, data).send({ from: actualAccount });
+    window.alert('Transaction OK: ' + tx.transactionHash);
   } catch (error) {
     console.log(error);
-    txStatus.text(getErrorMessage(error));
+    window.alert('Error: ' + getErrorMessage(error));
   }
+  $('#contactForm').trigger('reset');
 }
 
 /**
@@ -131,11 +112,12 @@ async function buyToken(id, amount, price) {
     const tx = await contractInstance.methods
       .buy(id, amount, data)
       .send({ from: actualAccount, value: web3.utils.toWei(total.toString()) });
-    txStatus.text(tx.transactionHash);
+      window.alert('Transaction OK: ' + tx.transactionHash);
   } catch (error) {
     console.log(error);
-    txStatus.text(getErrorMessage(error));
+    window.alert('Error: ' + getErrorMessage(error));
   }
+  clearForm($('#table-tokens'));
 }
 
 /**
@@ -160,7 +142,6 @@ async function getTokens() {
     return shows;
   } catch (error) {
     console.log(error);
-    txStatus.text(getErrorMessage(error));
   }
 }
 
@@ -189,7 +170,7 @@ function makeTableHtml(arr) {
     cells.push(`<td><button id="buy-${arr[i]['id']}" class="btn btn-primary">Buy</button></td>`);
     rows.push(`<tr>${cells.join("")}</tr>`);
   }
-  table.push(`<table class="table card-table table-striped">`);
+  table.push(`<table class="table card-table table-striped" id="table-tokens">`);
   table.push(`<thead>${top_row.join("")}</thead>`);
   table.push(`<tbody>${rows.join("")}<tbody>`);
   table.push("</table>");
@@ -232,7 +213,6 @@ const getWeb3 = async () => {
       ethereum.on('chainChanged', handleNetworkChange);
       await loadAccountData();
       await loadContractData();
-      
       return true;
     } catch (e) {
       // User denied access
@@ -264,9 +244,12 @@ const getErrorMessage = (error) => {
   if (error?.code === 4001) {
     return error.message;
   }
-  const b = error.message.replace('[ethjs-query] while formatting outputs from RPC ', '');
-  const c = b.replaceAll('\'', '');
-  return JSON.parse(c)?.value?.data?.message;
+  if (error?.code === -32603 ) { 
+    const b = error.message.replace('[ethjs-query] while formatting outputs from RPC ', '');
+    const c = b.replaceAll('\'', '');
+    return JSON.parse(c)?.value?.data?.message;
+  }
+  return JSON.stringify(error);
 }
 
 async function loadContractData() {
@@ -275,6 +258,11 @@ async function loadContractData() {
 
   } catch (error) {
     console.log(error);
-
   }
+}
+
+function clearForm($form)
+{
+    $form.find(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio').val('');
+    $form.find(':checkbox, :radio').prop('checked', false);
 }

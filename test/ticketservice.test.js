@@ -121,7 +121,6 @@ contract('TicketContract', async accounts => {
       // this should fail
       await contract.buy(id, 3, data, { from: alice, value: web3.utils.toWei('0.15') });
     } catch (error) {
-
       //assert
       assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Max ammount per person reached -- Reason given: Max ammount per person reached.');
     }
@@ -169,10 +168,9 @@ contract('TicketContract', async accounts => {
    */
   async function createTicket(name, price, amount, maxSellPerPerson, owner) {
     const infoUrl = 'someUrl';
-    const imageUrl = 'otherUrl';
     let nonce = await contract.nonce();
     const newId = nonce.toNumber() + 1;
-    await contract.create(name, price, amount, maxSellPerPerson, infoUrl, imageUrl, data, { from: owner });
+    await contract.create(name, price, amount, maxSellPerPerson, infoUrl, data, { from: owner });
     return newId;
   }
 });

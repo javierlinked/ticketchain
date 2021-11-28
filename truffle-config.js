@@ -6,7 +6,6 @@ const HDWalletProvider = require("@truffle/hdwallet-provider");
 const mnemonic = process.env.MNEMONIC;
 const projectId = process.env.PROJECT_ID;
 
-
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
@@ -24,7 +23,8 @@ module.exports = {
     },
     rinkeby: {
       provider: function () {
-        return new HDWalletProvider(mnemonic, `wss://rinkeby.infura.io/ws/v3/${projectId}`);
+        // return new HDWalletProvider(mnemonic, `wss://rinkeby.infura.io/ws/v3/${projectId}`);
+        return new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${projectId}`);
       },
       network_id: 4,
       gas: 4500000,  //4116150

@@ -3,8 +3,8 @@ To get a developer certification for the course, your project must:
 - [x] Following this naming format https://github.com/YOUR_GITHUB_USERNAME_HERE/blockchain-developer-bootcamp-final-project
 - [ ] Contain a README.md file which describes the project, describes the directory structure, and where the frontend project can be accessed (see #8). Please also include your public Ethereum account if you would like to receive your certification as an NFT (this is optional). 
 
-- [ ] Contain smart contract(s) which:
-    - [ ] Are commented to the specs described here
+- [x] Contain smart contract(s) which:
+    - [x] Are commented to the specs described here
     - [x] Use at least two design patterns from the "Smart Contracts" section (SEE A LIST OF DESIGN PATTERNS HERE)
     - [x] Protect against two attack vectors from the "Smart Contracts" section with its SWC number (SEE A LIST OF ATTACK VECTORS HERE)
     - [x] Inherits from at least one library or interface
@@ -14,7 +14,7 @@ To get a developer certification for the course, your project must:
 - [ ] `avoiding_common_attacks.md`
 
 - [x] Have at least five unit tests for your smart contract(s) that pass. 
-    - [ ] In the code, include a sentence or two explaining what the tests are covering their expected behavior. You are not required to build unit tests for your frontend, just your smart contracts.
+    - [x] In the code, include a sentence or two explaining what the tests are covering their expected behavior. You are not required to build unit tests for your frontend, just your smart contracts.
 
 - [ ] Contain a `deployed_address.txt` file which contains the testnet address and network where your contract(s) have been deployed
 
@@ -24,7 +24,7 @@ To get a developer certification for the course, your project must:
     - [x] Displays information from your smart contract
     - [x] Allows a user to submit a transaction to update smart contract state
     - [x] Updates the frontend if the transaction is successful or not
-    - [ ] Hosted on Github Pages, Netlify, Fleek, Surge, Heroku or some other free frontend service that gives users a public interface to your decentralized application. That address should be in your README.md document.
+    - [x] Hosted on Github Pages, Netlify, Fleek, Surge, Heroku or some other free frontend service that gives users a public interface to your decentralized application. That address should be in your README.md document.
 
 - [ ] In your README.md, be sure to have clear instructions on: 
     - [ ] Installing dependencies for your project 
