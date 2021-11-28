@@ -144,7 +144,6 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint id,
         uint amount
     ) public override
-    /**   onlyOwner ???*/ 
     whenNotPaused {
         // NOTE:  to myself, not related to _balances[][] but to existence of tokens in the contract
         _burn(account, id, amount);

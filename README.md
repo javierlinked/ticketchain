@@ -46,6 +46,18 @@ https://javierlinked-consensys.vercel.app/
 
 // TODO
 
+frontend React
+add UI support for pausable
+add list of owned tokens and ammounts
+
+use SafeMath
+move ownable to roles approach
+evaluate gas optimizations
+Migrate metadata of a token to a json file in infura or some other offchain solution
+ERC1155PresetMinterPauser
+
+
+
 networks: {
     ganache: {
       host: "127.0.0.1",

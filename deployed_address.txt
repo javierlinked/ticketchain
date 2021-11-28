@@ -1,2 +1,2 @@
-network:Rinkeby
-address:
+network: Rinkeby
+address: 0xEda640Dab1D831bCDeD7102f6b1aA2C7a2bC11c9

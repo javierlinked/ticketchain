@@ -10,15 +10,15 @@ To get a developer certification for the course, your project must:
     - [x] Inherits from at least one library or interface
     - [x] Can be easily compiled, migrated and tested (see #5) (we just need to compile and test it locally.)
 
-- [ ] `design_pattern_decisions.md`
-- [ ] `avoiding_common_attacks.md`
+- [x] `design_pattern_decisions.md`
+- [x] `avoiding_common_attacks.md`
 
 - [x] Have at least five unit tests for your smart contract(s) that pass. 
     - [x] In the code, include a sentence or two explaining what the tests are covering their expected behavior. You are not required to build unit tests for your frontend, just your smart contracts.
 
-- [ ] Contain a `deployed_address.txt` file which contains the testnet address and network where your contract(s) have been deployed
+- [x] Contain a `deployed_address.txt` file which contains the testnet address and network where your contract(s) have been deployed
 
-- [ ] Have a frontend interface built with a framework like React or plain HTML/CSS/JS that:
+- [x] Have a frontend interface built with a framework like React or plain HTML/CSS/JS that:
     - [x] Detects the presence of MetaMask
     - [x] Connects to the current account
     - [x] Displays information from your smart contract
