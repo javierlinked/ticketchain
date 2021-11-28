@@ -42,7 +42,7 @@ Then navigate to [http://127.0.0.1:8080](http://127.0.0.1:8080)
 Application will ask to sign with your wallet.
 The first account in the wallet is the **contract owner** and it's allowed to create **ticket tockens** by filling the form, and setting the price and rest of the data.
 
-![image description](./create.png)
+![create screeen](./create.png)
 
 Hit create and signt with your wallet. Then wait for the transaction to be shown.
 
@@ -50,6 +50,11 @@ Once a at least one token set has been crated you can switch to an account with 
 Set a number to buy (it has to be less or equal to the max allowed per person) and hit buy. 
 Sign the trasnaction. Payment will be performed and tokens transfered.
 Balance is managed by ERC1155 contract.
+
+In the end you can see events created by the contract on Ganache interfase.
+
+![events](./events.png)
+
 
 **NOTE:** If you receive transaction error and you are using MetaMask, please reset your account and try again.
 
