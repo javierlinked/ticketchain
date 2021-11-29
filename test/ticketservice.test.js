@@ -41,6 +41,21 @@ contract('TicketContract', async accounts => {
   });
 
   /**
+   * tests a contract cannot be minted if the the value of maxSellPerPerson is invalid
+   */
+   it('should be fail when amount or maxSellPerPerson are invalid', async () => {
+    // act
+    try {
+      const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 0, 4, contractOwner);
+    } catch (error) {
+      //assert
+      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Incorrect amount -- Reason given: Incorrect amount.');
+    }
+  });
+
+
+
+  /**
    * Tests a token can be bought, and added to the buyer's balance
    */
   it('should be able to sell tokens', async () => {
@@ -78,11 +93,14 @@ contract('TicketContract', async accounts => {
    */
   it('should fail on selling when not enough minted tickets', async () => {
     // arrange
-    const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 2, 4, contractOwner);
+    const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 4, 4, contractOwner);
 
     // act
     try {
+      // this should work
       await contract.buy(id, 4, data, { from: alice, value: web3.utils.toWei('0.2') });
+      // this should fail
+      await contract.buy(id, 1, data, { from: alice, value: web3.utils.toWei('0.05') });
     } catch (error) {
 
       //assert
@@ -170,7 +188,12 @@ contract('TicketContract', async accounts => {
     const infoUrl = 'someUrl';
     let nonce = await contract.nonce();
     const newId = nonce.toNumber() + 1;
-    await contract.create(name, price, amount, maxSellPerPerson, infoUrl, data, { from: owner });
+    try {
+      await contract.create(name, price, amount, maxSellPerPerson, infoUrl, data, { from: owner });
+    } catch (error) {
+      throw(error);
+    }
+    
     return newId;
   }
 });

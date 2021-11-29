@@ -55,6 +55,15 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint amount
     );
 
+    /// @notice verifies if amount is valid
+    modifier validAmount(uint amount, uint maxSellPerPerson) {
+        require(amount > 0, "Incorrect amount");
+        require(maxSellPerPerson > 0, "Incorrect maxSellPerPerson");
+        require(amount >= maxSellPerPerson, "Incorrect amount");
+        _;
+    }
+
+
     /// @notice this verifies the payment is exact or cancels the transaction
     modifier paidExactly(uint amount, uint id) {
         uint total = amount * tickets[id].price;
@@ -99,7 +108,7 @@ contract TicketContract is ERC1155, Ownable, ERC1155Pausable, ERC1155Burnable {
         uint maxSellPerPerson,
         string memory infoUrl,
         bytes memory data
-    ) public onlyOwner whenNotPaused {
+    ) public onlyOwner validAmount(amount, maxSellPerPerson) whenNotPaused {
         uint newId = ++nonce;
 
         address owner = msg.sender;

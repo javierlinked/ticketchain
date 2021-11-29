@@ -49,11 +49,7 @@ Hit create and signt with your wallet. Then wait for the transaction to be shown
 Once a at least one token set has been crated you can switch to an account with balance and buy some of them.
 Set a number to buy (it has to be less or equal to the max allowed per person) and hit buy. 
 Sign the trasnaction. Payment will be performed and tokens transfered.
-Balance is managed by ERC1155 contract.
-
-In the end you can see events created by the contract on Ganache interfase.
-
-![events](./events.png)
+Balance is managed by ERC1155 contract and displayed in the UI.
 
 
 **NOTE:** If you receive transaction error and you are using MetaMask, please reset your account and try again.
@@ -96,6 +92,7 @@ truffle test
 
 ## TODO
 
+- [ ] Migrate to ethers.js
 - [ ] Migrate metadata of a token to a json file in infura or some other offchain solution
 - [ ] Use SafeMath.sol for arithmetic operations
 - [ ] Move Ownable to roles approach
@@ -103,7 +100,7 @@ truffle test
 - [ ] evaluate gas optimizations
 - [ ] Change UI to React
 - [ ] Add UI for pausable
-- [ ] Add a list for onwed tokens both for owner and for others.
+- [ ] Add a list for minted tokens and balance for contract owner.
 
 
 ## Project requirements:

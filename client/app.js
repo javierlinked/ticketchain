@@ -11,7 +11,7 @@ const ganache = '5777'; // 5777
 const data = '0x6164646974696f6e616c2064617461';
 
 let ethereum = window['ethereum'];
-let web3, actualAccount, json, contractInstance, shows, tokens, contractAddress;
+let web3, actualAccount, json, contractInstance, shows, contractAddress;
 
 
 /**
@@ -38,7 +38,6 @@ async function init() {
   if (!await getWeb3()) {
     $('#noWallet').show();
   } else {
-    console.log(ethereum.networkVersion);
     if (isAllowedNetwork(ethereum.networkVersion)) {
       contractInstance = new web3.eth.Contract(json.abi, contractAddress);
       contractInstance.setProvider(ethereum);
@@ -60,10 +59,15 @@ async function togglePanels() {
     $('#ownerView').show();
     $('#buyerView').hide();
   } else {
-    tokens = await getTokens();
-    const table = makeTableHtml(tokens);
+    const tokens = await getTokens();
+    const table = makeTableHtmlActions(tokens);
     document.getElementById('tokentList').innerHTML = table;
     bindActions();
+
+    const bal = await getBalance(tokens, actualAccount);
+    const tableBalance = makeTableHtmlBalance( bal);
+    document.getElementById('balance').innerHTML = tableBalance;
+
     $('#ownerView').hide();
     $('#buyerView').show();
   }
@@ -113,11 +117,11 @@ async function buyToken(id, amount, price) {
       .buy(id, amount, data)
       .send({ from: actualAccount, value: web3.utils.toWei(total.toString()) });
       window.alert('Transaction OK: ' + tx.transactionHash);
+      window.location.reload();
   } catch (error) {
     console.log(error);
     window.alert('Error: ' + getErrorMessage(error));
   }
-  clearForm($('#table-tokens'));
 }
 
 /**
@@ -150,7 +154,7 @@ async function getTokens() {
  * @param {any[]} arr array of objects
  * @returns {string} html table
  *  */
-function makeTableHtml(arr) {
+function makeTableHtmlActions(arr) {
   let table = [];
   let top_row = [];
   let rows = [];
@@ -176,6 +180,39 @@ function makeTableHtml(arr) {
   table.push("</table>");
   return table.join("");
 }
+
+/**
+ * Given an array of objects, return a html table
+ * @param {any[]} arr array of objects
+ * @returns {string} html table
+ *  */
+ function makeTableHtmlBalance(arr) {
+  let table = [];
+  let top_row = [];
+  let rows = [];
+  for (let i = 0; i < arr.length; i++) {
+    let cells = [];
+    for (let property in arr[i]) {
+      if (top_row.length < Object.keys(arr[i]).length) {
+        top_row.push(`<th scope="col">${property}</th>`);
+      }
+      if (arr[i][property] === null) {
+        cells.push(`<td>${null}</td>`);
+      } else {
+        cells.push(`<td>${arr[i][property]}</td>`);
+      }
+    }
+    cells.push(`<td><button id="" class="btn btn-primary" onclick="window.alert('Not implemented')">Burn</button></td>`);
+    cells.push(`<td><button id="" class="btn btn-primary" onclick="window.alert('Not implemented')">Transfer</button></td>`);
+    rows.push(`<tr>${cells.join("")}</tr>`);
+  }
+  table.push(`<table class="table card-table table-striped" id="table-tokens">`);
+  table.push(`<thead>${top_row.join("")}</thead>`);
+  table.push(`<tbody>${rows.join("")}<tbody>`);
+  table.push("</table>");
+  return table.join("");
+}
+
 
 /**
  * binds actions to buttons on buy table
@@ -255,14 +292,27 @@ const getErrorMessage = (error) => {
 async function loadContractData() {
   try {
     contractAddress = json.networks[ethereum.networkVersion].address;
-
   } catch (error) {
     console.log(error);
   }
 }
 
-function clearForm($form)
-{
-    $form.find(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio').val('');
-    $form.find(':checkbox, :radio').prop('checked', false);
+/**
+ * Retrieves balance of a given account
+ * @param {any[]} tokens
+ * @param {string} address
+ */
+async function getBalance(tokens, address) {
+  try {
+    const balance = tokens.map(async (token) => {
+      const i = {
+        name: token.name,
+        amount: await contractInstance.methods.balanceOf(address, token.id).call()
+      }
+      return i;
+    });
+    return Promise.all(balance);  
+  } catch (error) {
+    console.log(error);
+  }
 }
