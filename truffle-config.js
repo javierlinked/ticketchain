@@ -31,5 +31,11 @@ module.exports = {
       gasPrice: 10000000000,
       networkCheckTimeout: 10000, 
     }
+  },
+  plugins: [
+    'truffle-plugin-verify'
+  ],
+  api_keys: {
+    etherscan: process.env.ETHERSCAN_API_KEY
   }
 };

@@ -12,7 +12,7 @@ Author: Javier Fernando Rojo @javierlinked
 
 ## Walkthrough Video
 
-[Walkthrough video]()
+[Walkthrough video](https://www.loom.com/share/876847b0e0ee43a9a0fff76a269703c1?sharedAppSource=personal_library)
 
 
 ## To Run Locally
@@ -28,14 +28,12 @@ Author: Javier Fernando Rojo @javierlinked
 
 Start [Ganache ui](https://www.trufflesuite.com/ganache) and execute the following commands:
 
-```
-cd blockchain-developer-bootcamp-final-project
-yarn
-truffle migrate --network develop --reset
-cd client
-yarn
-yarn start
-```
+- Run yarn install in project root to install Truffle build and smart contract dependencies
+- Run local testnet in port `7545` with ganache ui
+- `truffle migrate --network development`
+- Run tests in Truffle console: `truffle test`
+- development network id is 1337, remember to change it in Metamask as well (add http://localhost:7545 as RPC URL and chainId 1337)
+
 
 Then navigate to [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
