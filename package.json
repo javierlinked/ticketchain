@@ -6,11 +6,11 @@
   "author": "@javierlinked <javierlinked@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.0",
+    "@openzeppelin/contracts": "^4.4.1",
     "@truffle/hdwallet-provider": "^1.7.0",
     "dotenv": "^10.0.0"
   },
   "devDependencies": {
-    "truffle-plugin-verify": "^0.5.18"
+    "truffle-plugin-verify": "^0.5.20"
   }
 }
