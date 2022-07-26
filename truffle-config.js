@@ -12,12 +12,12 @@ module.exports = {
   contracts_build_directory: path.join(__dirname, "client/contracts"),
   compilers: {
     solc: {
-      version: "0.8.10",
+      version: "0.8.15",
     }
   },
   networks: {
-    develop: {
-      host: "127.0.0.1",     // Localhost (default: none)
+    development: {
+      host: "localhost",     // Localhost (default: none)
       port: 7545,            // Standard Ethereum port (default: none)
       network_id: "*"        // Any network (default: none)           
     },
@@ -33,7 +33,7 @@ module.exports = {
     }
   },
   plugins: [
-    'truffle-plugin-verify'
+    "truffle-plugin-verify"
   ],
   api_keys: {
     etherscan: process.env.ETHERSCAN_API_KEY

@@ -1,16 +1,16 @@
 {
   "name": "blockchain-developer-bootcamp-final-project",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "index.js",
   "repository": "git@github.com:javierlinked/blockchain-developer-bootcamp-final-project.git",
   "author": "@javierlinked <javierlinked@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.1",
-    "@truffle/hdwallet-provider": "^1.7.0",
-    "dotenv": "^10.0.0"
+    "@openzeppelin/contracts": "^4.7.1",
+    "@truffle/hdwallet-provider": "^2.0.12",
+    "dotenv": "^16.0.1"
   },
   "devDependencies": {
-    "truffle-plugin-verify": "^0.5.20"
+    "truffle-plugin-verify": "^0.5.26"
   }
 }
