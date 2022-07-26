@@ -21,12 +21,14 @@ Author: Javier Fernando Rojo @javierlinked
 
 - Node.js >= v16
 - Yarn
+- [Ganache ui](https://www.trufflesuite.com/ganache)
+- [Truffle](https://trufflesuite.com/docs/truffle/quickstart/)
 - `git clone git@github.com:javierlinked/blockchain-developer-bootcamp-final-project.git`
 
 
 ### Contract
 
-Start [Ganache ui](https://www.trufflesuite.com/ganache) and execute the following commands:
+Start `Ganache` and execute the following commands:
 
 - Run `yarn` in project root to install Truffle build and smart contract dependencies
 - Create a new profile in Ganache ui using `truffle-config.js` provided.
@@ -87,7 +89,7 @@ truffle test
 
 ## Public Ethereum wallet for certification
 
-`0x23db5E49544C5A5104316E6eE9734120F3eec357`
+`javierlinked.eth`
 
 
 ## TODO
