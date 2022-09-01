@@ -1,4 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-truffle5");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -8,6 +9,9 @@ module.exports = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
+      // accounts: {
+      //   mnemonic: MNEMONIC
+      // },
     },
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${PROJECT_ID}`,

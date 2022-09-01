@@ -36,7 +36,7 @@ contract('TicketContract', async accounts => {
     } catch (error) {
 
       //assert
-      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Ownable: caller is not the owner');
+      assert.equal(error.message, 'VM Exception while processing transaction: reverted with reason string \'Ownable: caller is not the owner\'');
     }
   });
 
@@ -49,7 +49,7 @@ contract('TicketContract', async accounts => {
       const id = await createTicket('Cinema Paradiso DEC 4', web3.utils.toWei('0.05'), 0, 4, contractOwner);
     } catch (error) {
       //assert
-      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Incorrect amount');
+      assert.equal(error.message, 'VM Exception while processing transaction: reverted with reason string \'Incorrect amount\'');
     }
   });
 
@@ -84,7 +84,7 @@ contract('TicketContract', async accounts => {
     } catch (error) {
 
       //assert
-      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Pausable: paused');
+      assert.equal(error.message, 'VM Exception while processing transaction: reverted with reason string \'Pausable: paused\'');
     }
   });
 
@@ -104,7 +104,7 @@ contract('TicketContract', async accounts => {
     } catch (error) {
 
       //assert
-      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Not enough tickets');
+      assert.equal(error.message, 'VM Exception while processing transaction: reverted with reason string \'Not enough tickets\'');
     }
   });
 
@@ -121,7 +121,7 @@ contract('TicketContract', async accounts => {
     } catch (error) {
 
       //assert
-      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Max ammount per person reached');
+      assert.equal(error.message, 'VM Exception while processing transaction: reverted with reason string \'Max ammount per person reached\'');
     }
   });
 
@@ -140,7 +140,7 @@ contract('TicketContract', async accounts => {
       await contract.buy(id, 3, data, { from: alice, value: web3.utils.toWei('0.15') });
     } catch (error) {
       //assert
-      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Max ammount per person reached');
+      assert.equal(error.message, 'VM Exception while processing transaction: reverted with reason string \'Max ammount per person reached\'');
     }
   });
 
@@ -157,7 +157,7 @@ contract('TicketContract', async accounts => {
     } catch (error) {
 
       //assert
-      assert.equal(error.message, 'Returned error: VM Exception while processing transaction: revert Incorrect amount');
+      assert.equal(error.message, 'VM Exception while processing transaction: reverted with reason string \'Incorrect amount\'');
     }
   });
 

@@ -1,5 +1,3 @@
-const hre = require("hardhat");
-
 async function main() {
   const TicketContract = await hre.ethers.getContractFactory('TicketContract')
   const db = await TicketContract.deploy()
