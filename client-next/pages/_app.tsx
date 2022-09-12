@@ -1,10 +1,22 @@
-import { Theme } from '@twilio-paste/core/theme'
+import '../styles/globals.css'
+import type { AppProps } from 'next/app'
+import { Web3ContextProvider } from '../context'
+import { ToastContainer } from 'react-toastify'
 
-function MyApp({ Component, pageProps }) {
+import 'react-toastify/dist/ReactToastify.css'
+
+function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Theme.Provider theme="default">
-      <Component {...pageProps} />
-    </Theme.Provider>
+    <Web3ContextProvider>
+      <>
+        <Component {...pageProps} />
+        <ToastContainer
+          hideProgressBar
+          position="bottom-right"
+          autoClose={2000}
+        />
+      </>
+    </Web3ContextProvider>
   )
 }
 

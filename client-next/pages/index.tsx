@@ -1,78 +1,34 @@
+import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Anchor } from '@twilio-paste/core/anchor'
-import { Heading } from '@twilio-paste/core/heading'
-import { Box } from '@twilio-paste/core/box'
-import { Paragraph } from '@twilio-paste/core/paragraph'
-import { ListItem, UnorderedList } from '@twilio-paste/core/list'
-import { ArrowForwardIcon } from '@twilio-paste/icons/cjs/ArrowForwardIcon'
-import { Separator } from '@twilio-paste/core/separator'
+import Link from 'next/link'
+import { Web3Button, Web3Address } from '../components/'
 
-export default function Home() {
+const Home: NextPage = () => {
   return (
-    <Box as="main" padding="space70">
+    <div className="flex h-screen flex-col">
       <Head>
-        <title>Paste NextJS App</title>
+        <title>Web3 Next-Boilerplate</title>
+        <meta name="description" content="Boilerplate for Web3 dApp" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Heading as="h1" variant="heading10">
-        Welcome to the{' '}
-        <Anchor href="https://paste.twilio.design">Paste Next.js App!</Anchor>
-        
-      </Heading>
+      <nav className="flex flex-row justify-between p-4">
+        <Link href="/about">
+          <a className="text-lg font-light">About</a>
+        </Link>
+        <Web3Button />
+      </nav>
 
-      <Paragraph>
-        Everything you need to get started using Paste in a Production app.
-        Start by editing <code>pages/index.tsx</code>
-      </Paragraph>
+      <main className="grow p-8 text-center">
+        <h1 className="pb-8 text-4xl font-bold">Home Page</h1>
+        <Web3Address />
+      </main>
 
-      <Separator orientation="horizontal" verticalSpacing="space120" />
-
-      <Heading as="h2" variant="heading20">
-        Useful links
-      </Heading>
-
-      <UnorderedList>
-        <ListItem>
-          <Heading as="h3" variant="heading30">
-            <Anchor href="https://paste.twilio.design">
-              <Box as="span" display="flex" alignItems="center">
-                Paste Documentation{' '}
-                <ArrowForwardIcon decorative size="sizeIcon60" />
-              </Box>
-            </Anchor>
-          </Heading>
-          <Paragraph>
-            Start here. Find in-depth information about using the Paste Design
-            System to build your Next app.
-          </Paragraph>
-        </ListItem>
-        <ListItem>
-          <Heading as="h3" variant="heading30">
-            <Anchor href="https://nextjs.org/docs">
-              <Box as="span" display="flex" alignItems="center">
-                NextJS Documentation{' '}
-                <ArrowForwardIcon decorative size="sizeIcon60" />
-              </Box>
-            </Anchor>
-          </Heading>
-          <Paragraph>
-            Find in-depth information about Next.js features and API.
-          </Paragraph>
-        </ListItem>
-        <ListItem>
-          <Heading as="h3" variant="heading30">
-            <Anchor href="https://vercel.com/new">
-              <Box as="span" display="flex" alignItems="center">
-                Deploy <ArrowForwardIcon decorative size="sizeIcon60" />
-              </Box>
-            </Anchor>
-          </Heading>
-          <Paragraph>
-            Instantly deploy your Next.js site to a public URL with Vercel.
-          </Paragraph>
-        </ListItem>
-      </UnorderedList>
-    </Box>
+      <footer className="justify-end p-4">
+        <p className="text-lg font-light">Footer</p>
+      </footer>
+    </div>
   )
 }
+
+export default Home
