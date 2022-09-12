@@ -5,31 +5,19 @@
   "repository": "git@github.com:javierlinked/blockchain-developer-bootcamp-final-project.git",
   "author": "@javierlinked <javierlinked@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "@openzeppelin/contracts": "^4.7.1",
-    "eslint": "^8.23.0"
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "web": "yarn workspace web dev",
+    "web:build": "yarn workspace web build",
+    "web:start": "yarn workspace web start",
+    "web:lint": "yarn workspace web lint",
+    "web:test": "yarn workspace web test"
   },
-  "devDependencies": {
-    "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
-    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
-    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
-    "@nomiclabs/hardhat-ethers": "^2.0.0",
-    "@nomiclabs/hardhat-etherscan": "^3.0.0",
-    "@nomiclabs/hardhat-truffle5": "^2.0.6",
-    "@nomiclabs/hardhat-web3": "^2.0.0",
-    "@typechain/ethers-v5": "^10.1.0",
-    "@typechain/hardhat": "^6.1.2",
-    "@types/chai": "^4.2.0",
-    "@types/mocha": "^9.1.0",
-    "chai": "^4.2.0",
-    "dotenv": "^16.0.1",
-    "ethers": "^5.4.7",
-    "hardhat": "^2.10.2",
-    "hardhat-gas-reporter": "^1.0.8",
-    "solidity-coverage": "^0.7.21",
-    "ts-node": ">=8.0.0",
-    "typechain": "^8.1.0",
-    "typescript": ">=4.5.0",
-    "web3": "^1.7.5"
+  "packageManager": "yarn@3.2.0",
+  "dependencies": {
+    "concurrently": "^7.0.0"
   }
 }
