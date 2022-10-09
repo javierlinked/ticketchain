@@ -7,7 +7,7 @@
 console.log('App started');
 
 const rinkeby = '4';
-const ganache = '5777'; // 5777
+const hardhat = '31337'; // 5777
 const data = '0x6164646974696f6e616c2064617461';
 
 let ethereum = window['ethereum'];
@@ -25,7 +25,8 @@ async function getJson(file) {
 }
 
 $(async (doument) => {
-  json = await getJson('./contracts/TicketContract.json');
+  json = await getJson('../artifacts/contracts/TicketContract.sol/TicketContract.json');
+  // debugger;
   await init();
   $('.createButton').on('click', createToken);
 });
@@ -260,7 +261,7 @@ const getWeb3 = async () => {
 }
 
 let isAllowedNetwork = (/** @type {string} */ networkId) => {
-  return [rinkeby, ganache].includes(networkId);
+  return [rinkeby, hardhat].includes(networkId);
 }
 
 function handleNetworkChange(networkId) {
@@ -291,7 +292,7 @@ const getErrorMessage = (error) => {
 
 async function loadContractData() {
   try {
-    contractAddress = json.networks[ethereum.networkVersion].address;
+    contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3';
   } catch (error) {
     console.log(error);
   }

@@ -5,12 +5,18 @@
   "repository": "git@github.com:javierlinked/blockchain-developer-bootcamp-final-project.git",
   "author": "@javierlinked <javierlinked@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "@openzeppelin/contracts": "^4.7.1",
-    "@truffle/hdwallet-provider": "^2.0.12",
-    "dotenv": "^16.0.1"
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "web": "yarn workspace web dev",
+    "web:build": "yarn workspace web build",
+    "web:preview": "yarn workspace web preview",
+    "contracts:test": "yarn workspace contracts test"
   },
-  "devDependencies": {
-    "truffle-plugin-verify": "^0.5.26"
+  "packageManager": "yarn@3.2.0",
+  "dependencies": {
+    "concurrently": "^7.0.0"
   }
 }
