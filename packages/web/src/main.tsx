@@ -6,20 +6,15 @@ import './index.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 
+const { VITE_PROJECT_ID } = import.meta.env;
 const { chains, provider } = configureChains(
-  [chain.mainnet],
+  [chain.mainnet, chain.sepolia, chain.goerli],
   [
-    jsonRpcProvider({
-      rpc: () => {
-        return {
-          http: 'https://rpc.ankr.com/eth',
-        };
-      },
-    }),
-    publicProvider(),
+    infuraProvider({apiKey: VITE_PROJECT_ID, priority: 0}),
+    publicProvider({priority: 1}),
   ]
 );
 

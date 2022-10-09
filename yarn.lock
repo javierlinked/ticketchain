@@ -2926,6 +2926,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"arweave-deploy@npm:^1.9.1":
+  version: 1.9.1
+  resolution: "arweave-deploy@npm:1.9.1"
+  bin:
+    arweave: dist/arweave
+  checksum: 4ae4007776a332ed9a2cea4b2166b0a6ff45fafdc45e6fabb611e928f078ffdb6275c9b0dd2460d8f526de37f1995c64fdb31f98df4a591df59745b84b97c427
+  languageName: node
+  linkType: hard
+
 "asap@npm:~2.0.6":
   version: 2.0.6
   resolution: "asap@npm:2.0.6"
@@ -12710,6 +12719,7 @@ __metadata:
     "@types/react": ^18.0.21
     "@types/react-dom": ^18.0.6
     "@vitejs/plugin-react": ^2.1.0
+    arweave-deploy: ^1.9.1
     ethers: ^5.7.1
     react: ^18.2.0
     react-dom: ^18.2.0
