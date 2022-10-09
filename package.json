@@ -12,7 +12,8 @@
   "scripts": {
     "web": "yarn workspace web dev",
     "web:build": "yarn workspace web build",
-    "web:preview": "yarn workspace web preview"
+    "web:preview": "yarn workspace web preview",
+    "contracts:test": "yarn workspace contracts test"
   },
   "packageManager": "yarn@3.2.0",
   "dependencies": {

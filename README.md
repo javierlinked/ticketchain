@@ -21,20 +21,19 @@ Author: Javier Fernando Rojo @javierlinked
 
 - Node.js >= v16
 - Yarn
-- [Ganache ui](https://www.trufflesuite.com/ganache)
-- [Truffle](https://trufflesuite.com/docs/truffle/quickstart/)
 - `git clone git@github.com:javierlinked/blockchain-developer-bootcamp-final-project.git`
 
 
 ### Contract
 
-Start `Ganache` and execute the following commands:
+## Documentation under construction 
 
-- Run `yarn` in project root to install Truffle build and smart contract dependencies
-- Create a new profile in Ganache ui using `truffle-config.js` provided.
-- `truffle migrate --network development`
-- Run tests in Truffle console: `truffle test`
-- development network id is 1337, remember to change it in Metamask as well (add http://localhost:7545 as RPC URL and chainId 1337)
+
+- `yarn`
+- `yarn install`
+- `yarn web`
+
+- `yarn contract:test`
 
 ### Frontend
 - change to `client`.
@@ -94,13 +93,13 @@ truffle test
 
 ## TODO
 
-- [ ] Migrate to ethers.js
+- [x] Migrate to ethers.js
 - [ ] Migrate metadata of a token to a json file in infura or some other offchain solution
-- [ ] Use SafeMath.sol for arithmetic operations
 - [ ] Move Ownable to roles approach
-- [ ] Evaluate `ERC1155PresetMinterPauser`
 - [ ] evaluate gas optimizations
-- [ ] Change UI to React
+- [-] Change UI to React
 - [ ] Add UI for pausable
 - [ ] Add a list for minted tokens and balance for contract owner.
-
+- [x] Monorepo
+- [x] Migrate to hardhat
+- [-] chage everything to typescript in contracts workspace
