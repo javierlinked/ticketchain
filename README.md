@@ -42,7 +42,7 @@ Author: Javier Fernando Rojo @javierlinked
 - Then navigate to [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
 Application will ask to sign with your wallet.
-The first account in the wallet is the **contract owner** and it's allowed to create **ticket tockens** by filling the form, and setting the price and rest of the data.
+The first account in the wallet is the **contract owner** and it's allowed to create **ticket tokens** by filling the form, and setting the price and rest of the data.
 
 ![create screeen](./create.png)
 
