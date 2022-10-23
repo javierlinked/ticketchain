@@ -1,19 +1,42 @@
 {
-  "name": "ticketservice-dapp",
-  "version": "1.0.0",
-  "description": "Dapp Client TicketService",
-  "main": "index.html",
-  "author": "Javier Rojo @javierlinked",
+  "name": "ticketchain-client",
+  "version": "1.1.0",
+  "repository": "git@github.com:javierlinked/ticketchain.git",
+  "author": "@javierlinked <javierlinked@gmail.com>",
   "license": "MIT",
+  "private": true,
+  "main": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+  },
   "dependencies": {
-    "live-server": "^1.2.2"
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@rainbow-me/rainbowkit": "^0.7.1",
+    "ethers": "^5.7.1",
+    "wagmi": "^0.6.8"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.14",
-    "web3": "^1.7.4"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "live-server"
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
+    "@vitejs/plugin-react": "^2.1.0",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.31.10",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4",
+    "vite": "^3.1.8"
   }
 }
