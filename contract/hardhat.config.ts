@@ -117,6 +117,7 @@ const config: HardhatUserConfig = {
     showTimeSpent: true,
     currency: 'USD',
     outputFile: 'reports/gas-report.log',
+    noColors: true,
   },
   typechain: {
     outDir: 'build/types',
