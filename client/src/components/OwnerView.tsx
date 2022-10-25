@@ -1,20 +1,31 @@
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
-import React, { ChangeEvent, FormEvent, MouseEventHandler, SyntheticEvent, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FormEvent,
+  MouseEventHandler,
+  SyntheticEvent,
+  useState,
+} from 'react';
 import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
+
+import TICKETSERVICE_ABI from '../../../contract/build/contracts/contracts/TicketContract.sol/TicketContract.json';
+import { TicketContract } from '../../../contract/build/types/';
 import { DEBUG, TICKETSERVICE_CONTRACT_ADDRESS } from '../constants';
-import TICKETSERVICE_ABI from 'contracts/build/contracts/contracts/TicketContract.sol/TicketContract.json';
-import { TicketContract } from 'contracts/build/types/';
 import { toWei } from '../utils';
 import { Button } from './Button';
 
-const initialValues = { showName: '', showPriceWei: '0', initialSupply: 0, maxSellPerPerson: 0, infoUrl: '' };
+const initialValues = {
+  showName: '',
+  showPriceWei: '0',
+  initialSupply: 0,
+  maxSellPerPerson: 0,
+  infoUrl: '',
+};
 export interface OwnerViewProps {
   children?: React.ReactNode;
 }
 
 export const OwnerView: React.FC<OwnerViewProps> = ({ children }) => {
-
-
   const [state, setState] = useState(initialValues);
   // const [showName, setShowName] = useState<string>('');
   // const [showPriceWei, setShowPriceWei] = useState<string>('');
@@ -39,15 +50,22 @@ export const OwnerView: React.FC<OwnerViewProps> = ({ children }) => {
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     type myField = keyof typeof initialValues;
     const { name, value } = e.target;
-    setState(prev => ({ ...prev, [e.target.name]: e.target.value }))
-     e.preventDefault();
-  }
+    setState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    e.preventDefault();
+  };
 
   const handleSubmit = (e: SyntheticEvent) => {
     const { showName, showPriceWei, initialSupply, maxSellPerPerson, infoUrl } = state;
-    debugger;
+    // debugger;
     console.log(e);
-    if (!showName || !showPriceWei || !initialSupply || !maxSellPerPerson || !infoUrl || !address) {
+    if (
+      !showName ||
+      !showPriceWei ||
+      !initialSupply ||
+      !maxSellPerPerson ||
+      !infoUrl ||
+      !address
+    ) {
       DEBUG && console.table(state);
       DEBUG && console.log({ address });
       alert('noop');
@@ -70,26 +88,23 @@ export const OwnerView: React.FC<OwnerViewProps> = ({ children }) => {
         initialSupply,
         maxSellPerPerson,
         infoUrl,
-        address
+        address,
       ];
-
 
       const { config } = usePrepareContractWrite({
         addressOrName: TICKETSERVICE_CONTRACT_ADDRESS,
         contractInterface: TICKETSERVICE_ABI.abi,
         functionName: 'create',
-        args: functionArgs
-
-      })
+        args: functionArgs,
+      });
       const { data, isLoading, isSuccess, write, status } = useContractWrite(config);
 
-      isError = status === 'error'
+      isError = status === 'error';
       // const tx = await writeAsync({ recklesslySetUnpreparedArgs: functionArgs });
 
       write?.();
 
       if (data) {
-
         console.log('tx >>> ', data);
 
         addRecentTransaction({
@@ -97,58 +112,71 @@ export const OwnerView: React.FC<OwnerViewProps> = ({ children }) => {
           description: 'Create Project Transaction',
         });
       }
-
     } catch (err) {
       console.log('errror >>> ', err);
     }
   };
 
-
-
   return (
-
-    <div id='ownerView'>
+    <div id="ownerView">
       <h3>Contract Owner: Create show token</h3>
-      <form id='contactForm' >
+      <form id="contactForm">
         <fieldset>
           <div>
-            <input id='showName' type='text' placeholder='Show name' onChange={onChange} />
-            <label htmlFor='showName'>Show name</label>
-          </div>
-          <div >
-            <input id='showPriceWei' type='text' placeholder='Show price' onChange={onChange} />
-            <label htmlFor='showPriceWei'>Show price</label>
-          </div>
-          <div >
-            <input id='initialSupply' placeholder='Initial supply' type='number' onChange={onChange} />
-            <label htmlFor='initialSupply'>Initial supply</label>
-          </div>
-          <div >
-            <input id='maxSellPerPerson' type='number' placeholder='maxSellPerPerson' onChange={onChange} />
-            <label htmlFor='maxSellPerPerson'>Maximum sell per person</label>
+            <input
+              id="showName"
+              type="text"
+              placeholder="Show name"
+              onChange={onChange}
+            />
+            <label htmlFor="showName">Show name</label>
           </div>
           <div>
-            <input id='infoUrl' type='text' placeholder='info Url' onChange={onChange} />
-            <label htmlFor='infoUrl'>Info url</label>
+            <input
+              id="showPriceWei"
+              type="text"
+              placeholder="Show price"
+              onChange={onChange}
+            />
+            <label htmlFor="showPriceWei">Show price</label>
           </div>
-
-
+          <div>
+            <input
+              id="initialSupply"
+              placeholder="Initial supply"
+              type="number"
+              onChange={onChange}
+            />
+            <label htmlFor="initialSupply">Initial supply</label>
+          </div>
+          <div>
+            <input
+              id="maxSellPerPerson"
+              type="number"
+              placeholder="maxSellPerPerson"
+              onChange={onChange}
+            />
+            <label htmlFor="maxSellPerPerson">Maximum sell per person</label>
+          </div>
+          <div>
+            <input id="infoUrl" type="text" placeholder="info Url" onChange={onChange} />
+            <label htmlFor="infoUrl">Info url</label>
+          </div>
 
           {/* if error occures display text to try again */}
           {isError && (
             <div>
-              <p className='text-red-500 text-xs italic'>
+              <p className="text-red-500 text-xs italic">
                 Error occured! Please try again!.
               </p>
             </div>
           )}
         </fieldset>
       </form>
-      <div >
+      <div>
         <button onClick={handleSubmit}>create</button>
       </div>
     </div>
-
 
     //    <h3>Contract Owner: Create show token</h3>
     // <table id='table-tokens'>
@@ -169,6 +197,5 @@ export const OwnerView: React.FC<OwnerViewProps> = ({ children }) => {
     //     </tr>
     //   </tbody>
     // </table>
-
   );
 };

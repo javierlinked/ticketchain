@@ -1,19 +1,24 @@
-import { Button } from '@mui/material'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import React from 'react'
-import { OwnerView } from './components/OwnerView'
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-export default function App() {
+import { OwnerView } from './components/OwnerView';
+
+function App() {
   return (
     <>
-      <div>
-        <h1>TicketChain</h1>
-      </div>
-      <div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: 12,
+        }}
+      >
         <ConnectButton accountStatus={'full'} />
-        <Button>asd</Button>
       </div>
-      <div>{/* <OwnerView /> */}</div>
+      <div>
+        <OwnerView></OwnerView>
+      </div>
     </>
-  )
+  );
 }
+
+export default App;

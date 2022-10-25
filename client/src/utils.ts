@@ -34,7 +34,7 @@ export function toGwei(gasPrice: BigNumberish): string {
  * @param decimals decimal value or BigNumberish.
  * @return BigNumber value or undefined.
  */
-export function toWei(value: string, decimals: number = 18): BigNumber {
+export function toWei(value: string, decimals = 18): BigNumber {
   return utils.parseUnits(value, decimals);
 }
 /**
@@ -46,7 +46,7 @@ export function toWei(value: string, decimals: number = 18): BigNumber {
  * @param decimals decimal value or BigNumberish.
  * @return string value.
  */
-export function fromWei(value: BigNumberish, decimals: number = 18): string {
+export function fromWei(value: BigNumberish, decimals = 18): string {
   return utils.formatUnits(value, decimals);
 }
 

@@ -1,9 +1,13 @@
-import { useContract, useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useContract,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from 'wagmi';
 
-import TICKETSERVICE_ABI  from 'contracts/build/contracts/contracts/TicketContract.sol/TicketContract.json'
-import { TICKETSERVICE_CONTRACT_ADDRESS } from "./constants";
-import { TicketContract } from 'contracts/build/types/';
-
+import TICKETSERVICE_ABI from '../../contract/build/contracts/contracts/TicketContract.sol/TicketContract.json';
+import { TicketContract } from '../../contract/build/types/';
+import { TICKETSERVICE_CONTRACT_ADDRESS } from './constants';
 
 /*//////////////////////////////////////////////////////////////
                               Ticket Service
@@ -27,7 +31,7 @@ export function useTicketServiceContract(): TicketContract {
 //       contractInterface: TICKETSERVICE_ABI.abi,
 //       functionName
 //     });
-  
+
 //     return contractPrepare;
 //   }
 
