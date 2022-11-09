@@ -8,7 +8,6 @@ import { task } from 'hardhat/config'
 
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-etherscan'
-import '@nomiclabs/hardhat-waffle'
 import 'hardhat-abi-exporter'
 import 'hardhat-gas-reporter'
 import 'hardhat-contract-sizer'
@@ -18,7 +17,7 @@ import '@typechain/hardhat'
 import 'solidity-coverage'
 
 // Networks
-
+const PRIVATE_KEY = ''
 interface NetworkConfig {
   network: string
   chainId: number
@@ -31,7 +30,6 @@ const networkConfigs: NetworkConfig[] = [
   { network: 'sepolia', chainId: 11155111 },
   { network: 'mainnet', chainId: 1 },
   { network: 'ropsten', chainId: 3 },
-  { network: 'rinkeby', chainId: 4 },
   { network: 'kovan', chainId: 42 },
 ]
 
@@ -43,7 +41,7 @@ function getDefaultProviderURL(network: string) {
   return `https://${network}.infura.io/v3/${process.env.INFURA_KEY}`
 }
 
-function setupDefaultNetworkProviders(buidlerConfig) {
+function setupDefaultNetworkProviders(buidlerConfig: HardhatUserConfig): void {
   for (const netConfig of networkConfigs) {
     buidlerConfig.networks[netConfig.network] = {
       chainId: netConfig.chainId,
@@ -67,7 +65,6 @@ task('accounts', 'Prints the list of accounts', async (taskArgs, bre) => {
 })
 
 // Config
-
 const config: HardhatUserConfig = {
   paths: {
     sources: './contracts',
@@ -107,6 +104,11 @@ const config: HardhatUserConfig = {
     ganache: {
       chainId: 1337,
       url: 'http://localhost:8545',
+    },
+    goerli: {
+      chainId: 5,
+      url: 'https://goerli.infura.io/v3/' + process.env.INFURA_KEY,
+      accounts: [`0x${PRIVATE_KEY}`],
     },
   },
   etherscan: {

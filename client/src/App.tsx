@@ -15,7 +15,7 @@ function App() {
         <ConnectButton accountStatus={'full'} />
       </div>
       <div>
-        <OwnerView></OwnerView>
+        <OwnerView />
       </div>
     </>
   );

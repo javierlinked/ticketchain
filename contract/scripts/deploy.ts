@@ -2,19 +2,19 @@ import '@nomiclabs/hardhat-ethers'
 import { ethers } from 'hardhat'
 
 async function main() {
-  const factory = await ethers.getContractFactory('TicketContract')
+  const [deployer] = await ethers.getSigners()
 
-  // If we had constructor arguments, they would be passed into deploy()
-  const contract = await factory.deploy()
+  console.log('Deploying contracts with the account:', deployer.address)
 
-  // The address the Contract WILL have once mined
-  console.log(contract.address)
+  console.log('Account balance:', (await deployer.getBalance()).toString())
+
+  const TicketService = await ethers.getContractFactory('TicketContract')
+  const contract = await TicketService.deploy()
+
+  console.log('Token address:', contract.address)
 
   // The transaction that was sent to the network to deploy the Contract
-  console.log(contract.deployTransaction.hash)
-
-  // The contract is NOT deployed yet; we must wait until it is mined
-  await contract.deployed()
+  console.log('Token transaction:', contract.deployTransaction.hash)
 }
 
 main()
