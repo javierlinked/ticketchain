@@ -1,20 +1,18 @@
 # TicketService: Smart Contract based ticket sell point
 
-## 🚧🚧 As a series of changes are being prepared on the `frontend` branch, this document is now being rewritten.
-
-Author: Javier Rojo [@javierlinked](https://twitter.com/javierlinked)
+Author: Javier Fernando Rojo @javierlinked
 
 
 # [The idea](./idea.md)
 
 ## Live Site
 
-[TicketChain](https://javierlinked-consensys.vercel.app/) **TBD: new deployment URL**
+[TicketChain](https://javierlinked-consensys.vercel.app/)
 
 
 ## Walkthrough Video
 
-[Walkthrough video](https://www.loom.com/share/876847b0e0ee43a9a0fff76a269703c1?sharedAppSource=personal_library) **TBD: new video once new site is deployed**
+[Walkthrough video](https://www.loom.com/share/876847b0e0ee43a9a0fff76a269703c1?sharedAppSource=personal_library)
 
 
 ## To Run Locally
@@ -23,19 +21,18 @@ Author: Javier Rojo [@javierlinked](https://twitter.com/javierlinked)
 
 - Node.js >= v16
 - Yarn
-- `git clone git@github.com:javierlinked/ticketchain.git`
+- `git clone git@github.com:javierlinked/blockchain-developer-bootcamp-final-project.git`
 
 
 ### Contract
 
-## Documentation under construction 
+Start [Ganache ui](https://www.trufflesuite.com/ganache) and execute the following commands:
 
-
-- `yarn`
-- `yarn install`
-- `yarn web`
-
-- `yarn contract:test`
+- Run `yarn` in project root to install Truffle build and smart contract dependencies
+- Create a new profile in Ganache ui using `truffle-config.js` provided.
+- `truffle migrate --network development`
+- Run tests in Truffle console: `truffle test`
+- development network id is 1337, remember to change it in Metamask as well (add http://localhost:7545 as RPC URL and chainId 1337)
 
 ### Frontend
 - change to `client`.
@@ -44,7 +41,7 @@ Author: Javier Rojo [@javierlinked](https://twitter.com/javierlinked)
 - Then navigate to [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
 Application will ask to sign with your wallet.
-The first account in the wallet is the **contract owner** and it's allowed to create **ticket tokens** by filling the form, and setting the price and rest of the data.
+The first account in the wallet is the **contract owner** and it's allowed to create **ticket tockens** by filling the form, and setting the price and rest of the data.
 
 ![create screeen](./create.png)
 
@@ -63,49 +60,45 @@ Balance is managed by ERC1155 contract and displayed in the UI.
 
 - Owner can pause the contract. [SECURITY]
 - Owner can unpause the contract. [SECURITY]
-- Contract Owner see balance of already created tokens.
-- Other accounts can see therir balance of already bought tokens.
-- Owner can burn a token. This is the case when token is used for the show. But also is a TBD, as token can remain in buyer's wallet as a simple NFT memorabilia, which eventually could be sold in in future auctions.
+- Owner can see balance of already created tokens.
+- Other account can see balance of already bought tokens.
+- Owner can burn a token. This is the case when token is used for the show.
 
 
-### Tests - CHANGE ME
+### Tests
 
 ```
 truffle test
 ```
 
 
-### Directory structure 
+### Directory structure
 
 ```
-├── packages/                              # base directory for yarn monorepo packages
-├── packages/web                           # web3 client that interacts with contract
-├── packages/contracts                     # Solidity contract and tooling
-├── packages/contracts/test                # Solidity contract unit tests
-├── packages/contracts/hardhat.config.ts   # Truffle config
-├── design_pattern_decisions.md            # Design pattern decisions
-├── avoiding_common_attacks.md             # Some considered potential SWC attacks TBD
+├── client/                  # Dapp
+├── contracts/               # Truffle contracts (alternatively `contracts`)
+├── migrations/              # Truffle migrations (alternatively `migrations`)
+├── test/                    # Automated tests (alternatively `tests`)
+├── truffle-config.js        # Truffle config
 └── README.md
-
 
 ```
 
 
 ## Public Ethereum wallet for certification
 
-`javierlinked.eth`
+`0x23db5E49544C5A5104316E6eE9734120F3eec357`
 
 
 ## TODO
 
-- [x] Migrate to ethers.js
+- [ ] Migrate to ethers.js
 - [ ] Migrate metadata of a token to a json file in infura or some other offchain solution
+- [ ] Use SafeMath.sol for arithmetic operations
 - [ ] Move Ownable to roles approach
+- [ ] Evaluate `ERC1155PresetMinterPauser`
 - [ ] evaluate gas optimizations
-- [ ] check contract with `slither`
 - [ ] Change UI to React
 - [ ] Add UI for pausable
 - [ ] Add a list for minted tokens and balance for contract owner.
-- [x] Monorepo
-- [x] Migrate to hardhat
-- [x] chage everything to typescript in contracts workspace
+
