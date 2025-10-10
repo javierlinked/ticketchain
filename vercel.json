@@ -1,9 +1,18 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd packages/app && yarn build",
-  "devCommand": "cd packages/app && yarn dev",
-  "installCommand": "yarn install",
-  "framework": null,
-  "outputDirectory": "packages/app/.next",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./packages/app"
+  "version": 2,
+  "builds": [
+    {
+      "src": "packages/app/package.json",
+      "use": "@vercel/next",
+      "config": {
+        "distDir": ".next"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "packages/app/$1"
+    }
+  ]
 }
