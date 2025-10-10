@@ -47,8 +47,8 @@ A modern decentralized ticketing platform built with Next.js 15, Ethereum smart 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/javierlinked/ticketchain-modern.git
-   cd ticketchain-modern
+   git clone https://github.com/javierlinked/ticketchain.git
+   cd ticketchain
    ```
 
 2. **Install dependencies**
@@ -103,7 +103,7 @@ A modern decentralized ticketing platform built with Next.js 15, Ethereum smart 
 ## Project Structure 📁
 
 ```
-ticketchain-modern/
+ticketchain/
 ├── packages/
 │   ├── app/                          # Next.js frontend application
 │   │   ├── src/
@@ -237,23 +237,31 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 
 ### Vercel (Recommended)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjavierlinked%2Fticketchain-modern)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjavierlinked%2Fticketchain)
 
-1. **Click Deploy Button** or import from GitHub
-2. **Add Environment Variables**
-   - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` (required)
-   - Contract addresses for each network (optional)
-3. **Deploy** - Vercel handles build and deployment automatically
+This project is optimized for Vercel with monorepo support. See [DEPLOYMENT.md](./DEPLOYMENT.md) for:
 
-### Manual Deployment
+- ✅ Complete Vercel setup guide
+- ✅ Environment variables configuration
+- ✅ Monorepo build optimization
+- ✅ CI/CD workflow
+- ✅ Custom domain setup
+- ✅ Troubleshooting guide
+
+**Quick Deploy:**
+1. Click the Deploy button above
+2. Add `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` in environment variables
+3. Deploy!
+
+### Self-Hosted
 
 ```bash
-cd packages/app
 yarn build
+cd packages/app
 yarn start
 ```
 
-For production, ensure all environment variables are set on your hosting platform.
+Server runs on `http://localhost:3000`. See [DEPLOYMENT.md](./DEPLOYMENT.md) for advanced options.
 
 ## Troubleshooting 🔧
 
@@ -276,6 +284,11 @@ For production, ensure all environment variables are set on your hosting platfor
 **TypeScript errors**
 - Run `yarn tsc --noEmit` to check types
 - Regenerate contract types: `cd packages/hardhat && yarn hardhat compile`
+
+**Build warnings (CSS @property)**
+- ⚠️ Warning: "Unknown at rule: @property" from DaisyUI is harmless
+- Build succeeds normally - this is a known compatibility notice
+- See [BUILD_NOTES.md](packages/app/BUILD_NOTES.md) for details
 
 ## Roadmap 🗺️
 
@@ -311,8 +324,8 @@ Built with inspiration from:
 
 ## Support 💬
 
-- **Issues**: [GitHub Issues](https://github.com/javierlinked/ticketchain-modern/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/javierlinked/ticketchain-modern/discussions)
+- **Issues**: [GitHub Issues](https://github.com/javierlinked/ticketchain/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/javierlinked/ticketchain/discussions)
 
 ## Funding
 
@@ -332,27 +345,3 @@ The score is calculated using [Contributor Graph](https://github.com/wslyvh/cont
 ---
 
 **Built with ❤️ for the decentralized web**
-
-
-## Funding
-
-This project is funding its core dependencies with [Drips protocol](https://www.drips.network/app/projects/github/wslyvh/nexth?exact). A split contract that splits 60% of all proceeds with core contributors and 40% for dependencies.
-
-### Contributors
-
-Contributors to this repository are rewarded based on their contributions to the project. Their contribution score is calculated based on a combination of the commits, issues, pull requests, and other contributions that determine the amount of funding they receives.
-
-The score is calculated using [Contributor Graph](https://github.com/wslyvh/contributor-graph).
-
-### Distribution
-
-- In 2024 the project received $7,075 USD in funding. 60% ($4,245) is distributed to core contributors.
-  - https://arbiscan.io/tx/0x95d6cd302374d64a401e35a27570fec9793bd9751cbfdeec36d3ade3b1965c24
-
-## Deploy on Vercel 🚢
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwslyvh%2Fnexth)
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=nexth&filter=next.js&utm_source=nexth&utm_campaign=nexth-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

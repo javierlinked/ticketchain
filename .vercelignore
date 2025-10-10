@@ -1,0 +1,23 @@
+# Hardhat package (not needed for frontend deployment)
+packages/hardhat/
+
+# Development files
+*.log
+.DS_Store
+.env.local
+.env*.local
+
+# Cache directories
+.cache
+.turbo
+node_modules/.cache
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/test/
+**/__tests__/
+
+# Documentation
+*.md
+!README.md

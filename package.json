@@ -5,9 +5,11 @@
   "repository": "git@github.com:javierlinked/ticketchain.git",
   "author": "@javierlinked",
   "scripts": {
-    "build": "yarn workspaces -pt run build",
-    "dev": "yarn workspaces -pt run dev",
-    "test": "yarn workspaces -pt run test"
+    "build": "cd packages/hardhat && yarn build && cd ../app && yarn build",
+    "dev": "yarn workspace app dev",
+    "dev:all": "yarn workspaces foreach -Apt run dev",
+    "test": "yarn workspaces foreach -Apt run test",
+    "vercel-build": "cd packages/app && yarn build"
   },
   "version": "0.2.0",
   "workspaces": [

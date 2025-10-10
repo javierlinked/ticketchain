@@ -1,10 +1,18 @@
 import type { Metadata, Viewport } from 'next'
+import { Inter } from 'next/font/google'
 import { PropsWithChildren } from 'react'
 import { SITE_DESCRIPTION, SITE_EMOJI, SITE_INFO, SITE_NAME, SITE_URL, SOCIAL_TWITTER } from '@/utils/site'
 import { Layout } from '@/components/layout'
 import { AppProviders } from '@/context/app-providers'
 import { headers } from 'next/headers'
 import '../assets/globals.css'
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 export const metadata: Metadata = {
   applicationName: SITE_NAME,
@@ -50,7 +58,7 @@ export default async function RootLayout(props: PropsWithChildren) {
   const cookies = headersList.get('cookie')
 
   return (
-    <html lang='en'>
+    <html lang='en' className={inter.variable}>
       <head>
         <link
           rel='icon'
@@ -58,7 +66,7 @@ export default async function RootLayout(props: PropsWithChildren) {
         />
       </head>
 
-      <body className='bg-app bg-grid text-slate-200 antialiased' data-theme='business'>
+      <body className='bg-app bg-grid text-slate-200 antialiased font-sans' data-theme='business'>
         <AppProviders cookies={cookies}>
           <Layout>{props.children}</Layout>
         </AppProviders>

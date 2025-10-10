@@ -32,8 +32,8 @@ This project adheres to professional standards of conduct. Please be respectful 
 
 1. **Fork and Clone**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/ticketchain-modern.git
-   cd ticketchain-modern
+   git clone https://github.com/YOUR_USERNAME/ticketchain.git
+   cd ticketchain
    ```
 
 2. **Install Dependencies**
@@ -75,7 +75,7 @@ This project adheres to professional standards of conduct. Please be respectful 
 ## Project Structure
 
 ```
-ticketchain-modern/
+ticketchain/
 ├── packages/
 │   ├── app/                    # Next.js frontend
 │   │   ├── src/
@@ -368,9 +368,9 @@ yarn lint
 
 ## Questions or Issues?
 
-- **Bug Reports**: [Open an issue](https://github.com/javierlinked/ticketchain-modern/issues)
-- **Feature Requests**: [Open an issue](https://github.com/javierlinked/ticketchain-modern/issues)
-- **Questions**: [Discussions](https://github.com/javierlinked/ticketchain-modern/discussions)
+- **Bug Reports**: [Open an issue](https://github.com/javierlinked/ticketchain/issues)
+- **Feature Requests**: [Open an issue](https://github.com/javierlinked/ticketchain/issues)
+- **Questions**: [Discussions](https://github.com/javierlinked/ticketchain/discussions)
 
 ## License
 

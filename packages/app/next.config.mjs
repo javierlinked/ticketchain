@@ -1,8 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack: (config) => {
+  
+  // Logging configuration
+  logging: {
+    fetches: {
+      fullUrl: false,
+    },
+  },
+  
+  webpack: (config, { isServer }) => {
     config.externals.push('pino-pretty', 'lokijs', 'encoding')
+    
+    // Suppress warnings for React Native dependencies that aren't needed for web
+    config.ignoreWarnings = [
+      { module: /node_modules\/@metamask\/sdk/ },
+      { message: /Can't resolve '@react-native-async-storage\/async-storage'/ },
+    ]
+    
     return config
   },
   images: {
