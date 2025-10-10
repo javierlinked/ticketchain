@@ -1,101 +1,358 @@
-# TicketService: Smart Contract based ticket sell point
+# TicketChain Modern 🎫
 
-Author: Javier Fernando Rojo @javierlinked
+A modern decentralized ticketing platform built with Next.js 15, Ethereum smart contracts, and Web3 technologies. Create, buy, and manage event tickets on the blockchain with full multi-chain support.
 
+![TicketChain Modern](https://nexth.vercel.app/opengraph-image)
 
-# [The idea](./idea.md)
+## Features ✨
 
-## Live Site
+- **🎟️ NFT-based Tickets**: ERC1155 smart contracts for flexible ticket management
+- **🌐 Multi-Chain Support**: Ethereum, Arbitrum, Base, Optimism, Polygon, and Sepolia testnet
+- **💳 Wallet Integration**: WalletConnect v2 with Reown AppKit for seamless wallet connections
+- **📱 Responsive Design**: Mobile-first UI with Tailwind CSS and DaisyUI
+- **⚡ Server Components**: Optimized performance with Next.js 15 App Router
+- **🔒 Type Safety**: Full TypeScript coverage with strict mode
+- **🎨 Modern UI**: Glassmorphism effects, smooth animations, and intuitive design
 
-[TicketChain](https://javierlinked-consensys.vercel.app/)
+## Tech Stack 🛠️
 
+### Frontend
+- **Next.js 15**: React framework with App Router
+- **TypeScript**: Strict type safety
+- **Tailwind CSS v4**: Utility-first styling with new @import syntax
+- **DaisyUI v5**: UI component library
+- **React 19**: Latest React features
 
-## Walkthrough Video
+### Web3
+- **Wagmi v2**: React hooks for Ethereum
+- **Viem v2**: TypeScript Ethereum library
+- **Reown AppKit**: Wallet connection UI
+- **WalletConnect**: Multi-wallet support
 
-[Walkthrough video](https://www.loom.com/share/876847b0e0ee43a9a0fff76a269703c1?sharedAppSource=personal_library)
+### Smart Contracts
+- **Solidity**: ERC1155 implementation
+- **Hardhat**: Development environment
+- **OpenZeppelin**: Secure contract libraries
 
-
-## To Run Locally
+## Quick Start 🚀
 
 ### Prerequisites
 
-- Node.js >= v16
-- Yarn
-- `git clone git@github.com:javierlinked/ticketchain.git`
+- Node.js 18+ (v20+ recommended)
+- Yarn package manager
+- MetaMask or compatible Web3 wallet
+- WalletConnect Project ID ([Get one free](https://cloud.walletconnect.com/))
 
+### Installation
 
-### Contract
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/javierlinked/ticketchain-modern.git
+   cd ticketchain-modern
+   ```
 
-Start [Ganache ui](https://www.trufflesuite.com/ganache) and execute the following commands:
+2. **Install dependencies**
+   ```bash
+   yarn install
+   ```
 
-- Run `yarn` in project root to install Truffle build and smart contract dependencies
-- Create a new profile in Ganache ui using `truffle-config.js` provided.
-- `truffle migrate --network develop`
-- Run tests in Truffle console: `truffle test`
-- development network id is 1337, remember to change it in Metamask as well (add http://localhost:7545 as RPC URL and chainId 1337)
+3. **Configure environment variables**
 
-### Frontend
-- change to `client`.
-- `yarn`
-- `yarn start`
-- Then navigate to [http://127.0.0.1:8080](http://127.0.0.1:8080)
+   Create `packages/app/.env.local`:
+   ```env
+   # WalletConnect Project ID (Required)
+   NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
+   
+   # Contract Addresses (Optional - defaults to Sepolia if not set)
+   NEXT_PUBLIC_SEPOLIA_CONTRACT_ADDRESS=0x...
+   NEXT_PUBLIC_MAINNET_CONTRACT_ADDRESS=0x...
+   NEXT_PUBLIC_ARBITRUM_CONTRACT_ADDRESS=0x...
+   NEXT_PUBLIC_BASE_CONTRACT_ADDRESS=0x...
+   NEXT_PUBLIC_OPTIMISM_CONTRACT_ADDRESS=0x...
+   NEXT_PUBLIC_POLYGON_CONTRACT_ADDRESS=0x...
+   ```
 
-Application will ask to sign with your wallet.
-The first account in the wallet is the **contract owner** and it's allowed to create **ticket tokens** by filling the form, and setting the price and rest of the data.
+4. **Start development server**
+   ```bash
+   cd packages/app
+   yarn dev
+   ```
 
-![create screeen](./create.png)
+5. **Access the app**
+   Open [http://localhost:3000](http://localhost:3000)
 
-Hit create and sign with your wallet. Then wait for the transaction to be shown as an alert.
+## Environment Variables 🔐
 
-When created at least one set of tokens you can switch to another account and buy them.
-Set a number to buy (it has to be less or equal to the max allowed per person) and hit buy. 
-Sign the transaction. Payment will be performed and tokens transferred.
-Balance is managed by ERC1155 contract and displayed in the UI.
+### Required
 
+| Variable | Description | Where to Get |
+|----------|-------------|--------------|
+| `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | WalletConnect Cloud project ID | [WalletConnect Cloud](https://cloud.walletconnect.com/) |
 
-**NOTE:** If you receive transaction error and you are using MetaMask, please reset your account and try again.
+### Optional (Contract Addresses)
 
+| Variable | Network | Default |
+|----------|---------|---------|
+| `NEXT_PUBLIC_SEPOLIA_CONTRACT_ADDRESS` | Sepolia Testnet | Falls back to default |
+| `NEXT_PUBLIC_MAINNET_CONTRACT_ADDRESS` | Ethereum Mainnet | Falls back to default |
+| `NEXT_PUBLIC_ARBITRUM_CONTRACT_ADDRESS` | Arbitrum One | Falls back to default |
+| `NEXT_PUBLIC_BASE_CONTRACT_ADDRESS` | Base | Falls back to default |
+| `NEXT_PUBLIC_OPTIMISM_CONTRACT_ADDRESS` | Optimism | Falls back to default |
+| `NEXT_PUBLIC_POLYGON_CONTRACT_ADDRESS` | Polygon | Falls back to default |
 
-### Not implemented
-
-- UI for pause/unpause contract functions (functions exist in contract, but no frontend buttons)
-- Owner can see balance of already created tokens.
-- Other account can see balance of already bought tokens.
-- UI for burn function (function exists in contract, but no frontend integration)
-
-
-### Tests
+## Project Structure 📁
 
 ```
-truffle test
+ticketchain-modern/
+├── packages/
+│   ├── app/                          # Next.js frontend application
+│   │   ├── src/
+│   │   │   ├── app/                 # App Router pages and layouts
+│   │   │   │   ├── tickets/         # Ticket management pages
+│   │   │   │   ├── api/             # API routes
+│   │   │   │   ├── error.tsx        # Error boundary
+│   │   │   │   ├── not-found.tsx    # 404 page
+│   │   │   │   └── global-error.tsx # Global error handler
+│   │   │   ├── components/          # Reusable UI components
+│   │   │   │   ├── icons/           # SVG icon library
+│   │   │   │   ├── alert-box.tsx    # Alert component
+│   │   │   │   ├── loading-spinner.tsx
+│   │   │   │   └── ...
+│   │   │   ├── hooks/               # Custom React hooks
+│   │   │   │   ├── tickets/         # Ticket-related hooks
+│   │   │   │   └── web3/            # Web3 interaction hooks
+│   │   │   ├── services/            # Business logic layer
+│   │   │   │   └── contract/        # Smart contract services
+│   │   │   ├── context/             # React Context providers
+│   │   │   ├── utils/               # Utility functions
+│   │   │   └── types/               # TypeScript definitions
+│   │   ├── public/                  # Static assets
+│   │   └── tailwind.config.ts       # Tailwind configuration
+│   │
+│   └── hardhat/                     # Smart contract development
+│       ├── contracts/               # Solidity contracts
+│       │   └── TicketContract.sol   # ERC1155 ticket contract
+│       ├── test/                    # Contract tests
+│       ├── ignition/                # Deployment modules
+│       └── typechain-types/         # Generated TypeScript types
+│
+├── .github/
+│   └── instructions/                # Development guidelines
+├── CONTRIBUTING.md                  # Contribution guide
+└── README.md                        # This file
 ```
 
+## Development 🧑‍💻
 
-### Directory structure
+### Running the Frontend
 
+```bash
+cd packages/app
+yarn dev          # Start development server
+yarn build        # Build for production
+yarn start        # Start production server
+yarn lint         # Run ESLint
+yarn tsc          # Type check
 ```
-├── client/                  # Dapp
-├── contracts/               # Truffle contracts (alternatively `contracts`)
-├── migrations/              # Truffle migrations (alternatively `migrations`)
-├── test/                    # Automated tests (alternatively `tests`)
-├── truffle-config.js        # Truffle config
-└── README.md
 
+### Smart Contract Development
+
+```bash
+cd packages/hardhat
+yarn hardhat compile                 # Compile contracts
+yarn hardhat test                    # Run tests
+yarn hardhat node                    # Start local node
+yarn hardhat ignition deploy         # Deploy contracts
 ```
 
+### Deploying Contracts
 
-## Public Ethereum wallet for certification
+1. **Deploy to Sepolia testnet**
+   ```bash
+   cd packages/hardhat
+   yarn hardhat ignition deploy ./ignition/modules/TicketContract.ts --network sepolia
+   ```
 
-`0x23db5E49544C5A5104316E6eE9734120F3eec357`
+2. **Copy contract address**
+   - Find deployed address in terminal output
+   - Add to `packages/app/.env.local`
+
+3. **Update frontend configuration**
+   - Contract ABIs are auto-generated in `packages/app/src/abis.ts`
+   - Update contract addresses in environment variables
+
+## Usage 👥
+
+### For Event Organizers (Contract Owners)
+
+1. **Connect Wallet** - Click "Connect Wallet" button
+2. **Create Tickets** - Fill in ticket details (name, price, max per person, info URL)
+3. **Submit Transaction** - Approve the blockchain transaction
+4. **Manage Tickets** - View all created tickets
+
+### For Attendees
+
+1. **Connect Wallet** - Click "Connect Wallet" button
+2. **Browse Tickets** - View available tickets from events
+3. **Purchase Tickets** - Select quantity and buy tickets
+4. **View Collection** - See owned tickets in your wallet
+
+## Key Features Explained 🔑
+
+### Multi-Chain Support
+- Automatically detects connected network
+- Switches between mainnet and L2s seamlessly
+- Per-network contract configuration
+
+### Server Components
+- Initial data fetching on server
+- Reduced client-side JavaScript
+- Improved SEO and performance
+
+### Error Handling
+- Route-level error boundaries
+- Global error fallback
+- Graceful degradation
+
+### Type Safety
+- Strict TypeScript mode
+- Viem for type-safe contract calls
+- Generated contract types from ABIs
+
+## Contributing 🤝
+
+We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for:
+- Development setup guide
+- Coding standards
+- Commit message conventions
+- Pull request process
+- Testing requirements
+
+## Packages 📦
+
+- [App](./packages/app) - Next.js 15 with App Router
+- [Hardhat](./packages/hardhat/) - Smart contract development
+
+## Deployment 🚢
+
+### Vercel (Recommended)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjavierlinked%2Fticketchain-modern)
+
+1. **Click Deploy Button** or import from GitHub
+2. **Add Environment Variables**
+   - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` (required)
+   - Contract addresses for each network (optional)
+3. **Deploy** - Vercel handles build and deployment automatically
+
+### Manual Deployment
+
+```bash
+cd packages/app
+yarn build
+yarn start
+```
+
+For production, ensure all environment variables are set on your hosting platform.
+
+## Troubleshooting 🔧
+
+### Common Issues
+
+**"No provider found" error**
+- Ensure MetaMask or compatible wallet is installed
+- Check that WalletConnect Project ID is set correctly
+
+**Contract not found**
+- Verify contract is deployed on the connected network
+- Check contract address in environment variables
+- Ensure you're connected to the correct network
+
+**Transaction failing**
+- Check wallet has sufficient ETH for gas
+- Verify ticket purchase doesn't exceed max per person limit
+- Ensure contract owner has created tickets
+
+**TypeScript errors**
+- Run `yarn tsc --noEmit` to check types
+- Regenerate contract types: `cd packages/hardhat && yarn hardhat compile`
+
+## Roadmap 🗺️
+
+- [ ] Secondary ticket marketplace
+- [ ] QR code generation for tickets
+- [ ] Ticket transfer functionality
+- [ ] Event management dashboard
+- [ ] Ticket validation system
+- [ ] IPFS metadata storage
+- [ ] Batch ticket operations
+- [ ] Gasless transactions (meta-transactions)
+
+## Security 🔒
+
+- Smart contracts follow OpenZeppelin standards
+- Input validation on all user inputs
+- Restricted image domains to prevent SSRF
+- Environment-based console logging
+- Rate limiting on API routes
+
+**Audit Status**: Not yet audited - use at your own risk
+
+## License 📄
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## Acknowledgments 🙏
+
+Built with inspiration from:
+- [Nexth](https://github.com/wslyvh/nexth) - Next.js + Ethereum starter
+- [OpenZeppelin](https://www.openzeppelin.com/) - Secure smart contract libraries
+- [WalletConnect](https://walletconnect.com/) - Web3 wallet connection protocol
+
+## Support 💬
+
+- **Issues**: [GitHub Issues](https://github.com/javierlinked/ticketchain-modern/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/javierlinked/ticketchain-modern/discussions)
+
+## Funding
+
+This project is funding its core dependencies with [Drips protocol](https://www.drips.network/app/projects/github/wslyvh/nexth?exact). A split contract that splits 60% of all proceeds with core contributors and 40% for dependencies.
+
+### Contributors
+
+Contributors to this repository are rewarded based on their contributions to the project. Their contribution score is calculated based on a combination of the commits, issues, pull requests, and other contributions that determine the amount of funding they receives.
+
+The score is calculated using [Contributor Graph](https://github.com/wslyvh/contributor-graph).
+
+### Distribution
+
+- In 2024 the project received $7,075 USD in funding. 60% ($4,245) is distributed to core contributors.
+  - https://arbiscan.io/tx/0x95d6cd302374d64a401e35a27570fec9793bd9751cbfdeec36d3ade3b1965c24
+
+---
+
+**Built with ❤️ for the decentralized web**
 
 
-## TODO
+## Funding
 
-- [ ] Migrate to ethers.js
-- [ ] Migrate metadata of a token to a json file in infura or some other offchain solution
-- [ ] Move Ownable to roles approach
-- [ ] Evaluate `ERC1155PresetMinterPauser`
-- [ ] Evaluate gas optimizations
-- [ ] Change UI to React
-- [ ] Add a list for minted tokens and balance for contract owner
+This project is funding its core dependencies with [Drips protocol](https://www.drips.network/app/projects/github/wslyvh/nexth?exact). A split contract that splits 60% of all proceeds with core contributors and 40% for dependencies.
 
+### Contributors
+
+Contributors to this repository are rewarded based on their contributions to the project. Their contribution score is calculated based on a combination of the commits, issues, pull requests, and other contributions that determine the amount of funding they receives.
+
+The score is calculated using [Contributor Graph](https://github.com/wslyvh/contributor-graph).
+
+### Distribution
+
+- In 2024 the project received $7,075 USD in funding. 60% ($4,245) is distributed to core contributors.
+  - https://arbiscan.io/tx/0x95d6cd302374d64a401e35a27570fec9793bd9751cbfdeec36d3ade3b1965c24
+
+## Deploy on Vercel 🚢
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwslyvh%2Fnexth)
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=nexth&filter=next.js&utm_source=nexth&utm_campaign=nexth-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

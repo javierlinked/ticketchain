@@ -1,4 +1,0 @@
-network: Rinkeby
-address: 0x847EC68794b188492845B9caf14EB28Fe87BEc2A
-
-https://rinkeby.etherscan.io/address/0x847EC68794b188492845B9caf14EB28Fe87BEc2A#code

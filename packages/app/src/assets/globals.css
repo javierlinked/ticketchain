@@ -1,0 +1,144 @@
+@import 'tailwindcss';
+@plugin "daisyui";
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Refined brand palette */
+  --brand-primary: 99 102 241; /* indigo */
+  --brand-secondary: 139 92 246; /* violet */
+  --brand-accent: 56 189 248; /* cyan */
+  --bg: 15 23 42; /* slate-900 */
+  --bg-panel: 30 41 59; /* slate-800 */
+  --bg-card: 15 23 42; /* slate-900 */
+  --text-primary: 241 245 249; /* slate-50 */
+  --text-secondary: 203 213 225; /* slate-300 */
+  --text-muted: 148 163 184; /* slate-400 */
+  --border: 51 65 85; /* slate-700 */
+  --success: 34 197 94;
+  --warning: 234 179 8;
+  --error: 239 68 68;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background-color: rgb(var(--bg));
+  color: rgb(var(--text-primary));
+}
+
+/* Background: subtle grid + gradient vignette */
+.bg-app {
+  background-color: rgb(var(--bg));
+  background-image:
+    radial-gradient(1200px 600px at 50% -20%, rgba(99, 102, 241, 0.08), transparent 60%),
+    radial-gradient(800px 400px at 80% 120%, rgba(139, 92, 246, 0.06), transparent 60%),
+    linear-gradient(to bottom, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 1));
+}
+
+.bg-grid {
+  background-image: linear-gradient(rgba(51, 65, 85, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 65, 85, 0.2) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px;
+  background-position: -1px -1px, -1px -1px;
+}
+
+/* Utilities */
+.text-gradient {
+  background: linear-gradient(90deg, rgb(var(--brand-primary)) 0%, rgb(var(--brand-secondary)) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card-glass {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+}
+
+.btn-primary {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  background: linear-gradient(90deg, rgb(var(--brand-primary)), rgb(var(--brand-secondary)));
+  color: white;
+}
+
+.btn-primary:hover { 
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.btn-secondary {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  background: rgba(51, 65, 85, 0.5);
+  color: rgb(var(--text-secondary));
+  border: 1px solid rgba(51, 65, 85, 0.8);
+}
+
+.btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.7);
+  transform: translateY(-1px);
+}
+
+.badge-muted { 
+  @apply px-2.5 py-1 rounded-lg text-xs font-medium;
+  background: rgba(51, 65, 85, 0.5);
+  color: rgb(var(--text-muted));
+}
+
+/* Header shadow */
+.header-blur { 
+  @apply backdrop-blur-lg supports-[backdrop-filter]:bg-slate-900/80;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+/* Smooth scrolling and rendering */
+html { scroll-behavior: smooth; }
+
+/* DaisyUI theme selection */
+:root { color-scheme: dark; }
+
+/* Custom card styles */
+.card-ticket {
+  @apply rounded-xl bg-slate-800/50 border border-slate-700/50 shadow-lg transition-all duration-200;
+  backdrop-filter: blur(8px);
+}
+
+.card-ticket:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Section dividers */
+.divider-vertical {
+  @apply border-l border-slate-700/50 h-full;
+}
+
+/* Input fields */
+.input-field {
+  @apply w-full px-4 py-2.5 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200;
+}
+
+.label-text {
+  @apply block text-sm font-medium text-slate-300 mb-1.5;
+}
+
+/* Status badges */
+.badge-info {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-900/30 text-indigo-300;
+}
+
+.badge-success {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900/30 text-green-300;
+}
+
+.badge-warning {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-900/30 text-amber-300;
+}

@@ -1,0 +1,26 @@
+{
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ignition": "^3.0.3",
+    "@nomicfoundation/hardhat-verify": "^3.0.3",
+    "@types/node": "^22.18.9",
+    "hardhat": "^3.0.7",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2"
+  },
+  "license": "MIT",
+  "name": "contracts",
+  "scripts": {
+    "build": "hardhat compile",
+    "coverage": "SOLIDITY_COVERAGE=true npx hardhat coverage",
+    "deploy": "yarn hardhat ignition deploy ./ignition/modules/TicketContract.ts --verify --deployment-id ticketcontract",
+    "deploy:nft": "npx hardhat ignition deploy ./ignition/modules/NFT.ts",
+    "test": "REPORT_GAS=true hardhat test",
+    "clean": "rimraf dist artifacts cache ignition/deployments types",
+    "verify": "npx hardhat verify"
+  },
+  "version": "0.2.1",
+  "type": "module",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.6"
+  }
+}
