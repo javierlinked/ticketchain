@@ -45,13 +45,13 @@ export function useOwnedTickets(
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchOwned = useCallback(async () => {
+  const fetchOwnedTickets = useCallback(async () => {
     if (!address || !chain) return
     
     setLoading(true)
     setError(null)
     try {
-      const owned: OwnedTicket[] = []
+      const ownedTicketsList: OwnedTicket[] = []
 
       for (const id of ticketIds) {
         try {
@@ -81,7 +81,7 @@ export function useOwnedTickets(
             // The second element (index 1) is the name
             const name = ticketDetails[1]
 
-            owned.push({
+            ownedTicketsList.push({
               id,
               name: name || `Ticket #${id.toString()}`,
               quantity: balance,
@@ -94,7 +94,7 @@ export function useOwnedTickets(
         }
       }
 
-      setOwnedTickets(owned)
+      setOwnedTickets(ownedTicketsList)
     } catch (err) {
       if (process.env.NODE_ENV === 'development') {
         console.error('Error fetching owned tickets:', err)
@@ -106,15 +106,15 @@ export function useOwnedTickets(
   }, [contractAddress, address, ticketIds, chain])
 
   useEffect(() => {
-    if (contractAddress && address && ticketIds.length > 0 && chain) fetchOwned()
-  }, [contractAddress, address, ticketIds, chain, fetchOwned, refreshKey])
+    if (contractAddress && address && ticketIds.length > 0 && chain) fetchOwnedTickets()
+  }, [contractAddress, address, ticketIds, chain, fetchOwnedTickets, refreshKey])
 
   const refetch = useCallback(() => {
     if (contractAddress && address && ticketIds.length > 0 && chain) {
-      return fetchOwned()
+      return fetchOwnedTickets()
     }
     return Promise.resolve()
-  }, [contractAddress, address, ticketIds, chain, fetchOwned])
+  }, [contractAddress, address, ticketIds, chain, fetchOwnedTickets])
 
   return {
     ownedTickets,

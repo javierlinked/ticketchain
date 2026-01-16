@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import hre from 'hardhat'
 
 describe('TicketContract', function () {
-  async function deployMessageFixture() {
+  async function deployTicketContractFixture() {
     const ethers = hre.ethers
     const [contractOwner, alice, bob] = await ethers.getSigners()
 
@@ -15,7 +15,7 @@ describe('TicketContract', function () {
 
   describe('Deployment', function () {
     it('Should have correct default owner', async function () {
-      const { ticketContract, contractOwner } = await loadFixture(deployMessageFixture)
+      const { ticketContract, contractOwner } = await loadFixture(deployTicketContractFixture)
 
       const owner = await ticketContract.owner()
       expect(owner).to.equal(contractOwner.address)

@@ -40,7 +40,7 @@ export function useTransactionNotifications(
   error: Error | null,
   options: TransactionNotificationOptions
 ) {
-  const { Add } = useNotifications()
+  const { addNotification } = useNotifications()
   const { chain } = useAccount()
   
   // Track which transaction hash we've notified about
@@ -61,7 +61,7 @@ export function useTransactionNotifications(
       const explorerUrl = chain?.blockExplorers?.default.url
       const shouldIncludeLink = options.includeExplorerLink && explorerUrl
 
-      Add(options.successMessage, {
+      addNotification(options.successMessage, {
         type: 'success',
         href: shouldIncludeLink ? `${explorerUrl}/tx/${txHash}` : undefined,
       })
@@ -69,7 +69,7 @@ export function useTransactionNotifications(
       notifiedTxHashRef.current = txHash
       notifiedErrorRef.current = false
     }
-  }, [isSuccess, txHash, Add, options.successMessage, options.includeExplorerLink, chain])
+  }, [isSuccess, txHash, addNotification, options.successMessage, options.includeExplorerLink, chain])
 
   // Handle error notification
   useEffect(() => {
@@ -77,11 +77,11 @@ export function useTransactionNotifications(
       const errorPrefix = options.errorMessagePrefix || 'Transaction failed'
       const errorMessage = error.message || 'Unknown error'
       
-      Add(`${errorPrefix}: ${errorMessage}`, {
+      addNotification(`${errorPrefix}: ${errorMessage}`, {
         type: 'error',
       })
 
       notifiedErrorRef.current = true
     }
-  }, [error, Add, options.errorMessagePrefix])
+  }, [error, addNotification, options.errorMessagePrefix])
 }

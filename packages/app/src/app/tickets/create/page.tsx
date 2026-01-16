@@ -8,14 +8,14 @@ import { useTransactionNotifications } from '@/hooks/web3/useTransactionNotifica
 import { InlineSpinner } from '@/components/loading-spinner'
 
 export default function CreateTicket() {
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState('0.01')
-  const [amount, setAmount] = useState('100')
+  const [ticketName, setTicketName] = useState('')
+  const [ticketPrice, setTicketPrice] = useState('0.01')
+  const [ticketSupply, setTicketSupply] = useState('100')
   const [maxSellPerPerson, setMaxSellPerPerson] = useState('5')
   const [infoUrl, setInfoUrl] = useState('')
 
   const { address, chain } = useAccount()
-  const { Add } = useNotifications()
+  const { addNotification } = useNotifications()
 
   const { address: contractAddress, abi } = useContractConfig(chain)
 
@@ -38,7 +38,7 @@ export default function CreateTicket() {
 
   const handleCreateTicket = () => {
     if (!address) {
-      Add('Please connect your wallet first', { type: 'warning' })
+      addNotification('Please connect your wallet first', { type: 'warning' })
       return
     }
 
@@ -48,7 +48,7 @@ export default function CreateTicket() {
       address: contractAddress,
       abi,
       functionName: 'create',
-      args: [name, parseEther(price), BigInt(amount), BigInt(maxSellPerPerson), infoUrl, emptyBytes as `0x${string}`],
+      args: [ticketName, parseEther(ticketPrice), BigInt(ticketSupply), BigInt(maxSellPerPerson), infoUrl, emptyBytes as `0x${string}`],
     })
   }
 
@@ -64,8 +64,8 @@ export default function CreateTicket() {
           <label className='label-text'>Event Name</label>
           <input
             type='text'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={ticketName}
+            onChange={(e) => setTicketName(e.target.value)}
             placeholder='Enter event name'
             className='input-field'
           />
@@ -76,8 +76,8 @@ export default function CreateTicket() {
             <label className='label-text'>Ticket Price (ETH)</label>
             <input
               type='number'
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              value={ticketPrice}
+              onChange={(e) => setTicketPrice(e.target.value)}
               placeholder='0.01'
               className='input-field'
               step='0.01'
@@ -89,8 +89,8 @@ export default function CreateTicket() {
             <label className='label-text'>Total Supply</label>
             <input
               type='number'
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              value={ticketSupply}
+              onChange={(e) => setTicketSupply(e.target.value)}
               placeholder='100'
               className='input-field'
               min='1'
@@ -126,7 +126,7 @@ export default function CreateTicket() {
         <button
           className='btn-primary w-full py-3 mt-4'
           onClick={handleCreateTicket}
-          disabled={isLoading || !name || !address}>
+          disabled={isLoading || !ticketName || !address}>
           {isLoading ? (
             <div className='flex items-center justify-center'>
               <InlineSpinner className='mr-2' />

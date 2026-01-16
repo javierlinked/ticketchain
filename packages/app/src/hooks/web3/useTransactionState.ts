@@ -49,7 +49,7 @@ export function useTransactionState(
   const [isTransactionSuccess, setIsTransactionSuccess] = useState(false)
   const [transactionError, setTransactionError] = useState<Error | null>(null)
   const [transactionHash, setTransactionHash] = useState<`0x${string}` | undefined>()
-  const { Add } = useNotifications()
+  const { addNotification } = useNotifications()
 
   const { isLoading: txLoading, error: txError, isSuccess: txSuccess } = useWaitForTransactionReceipt({ hash: txData })
 
@@ -58,17 +58,17 @@ export function useTransactionState(
     if (txSuccess) {
       setIsTransactionSuccess(true)
       setTransactionHash(txData)
-      Add(`Transaction successful`, {
+      addNotification(`Transaction successful`, {
         type: 'success',
         href: chain?.blockExplorers?.default.url ? `${chain.blockExplorers.default.url}/tx/${txData}` : undefined,
       })
     } else if (txError) {
       setTransactionError(txError)
-      Add(`Transaction failed: ${txError.cause}`, {
+      addNotification(`Transaction failed: ${txError.cause}`, {
         type: 'error',
       })
     }
-  }, [txSuccess, txError, txLoading, txData, Add, chain])
+  }, [txSuccess, txError, txLoading, txData, addNotification, chain])
 
   const resetTransactionState = () => {
     setIsTransactionLoading(false)

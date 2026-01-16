@@ -47,7 +47,7 @@ export function useAvailableTickets(
     setLoading(true)
     setError(null)
     try {
-      const results: Ticket[] = []
+      const fetchedTickets: Ticket[] = []
       for (const id of ticketIds) {
         const details = await readContract<TicketDetails>(
           {
@@ -59,7 +59,7 @@ export function useAvailableTickets(
           chain
         )
         if (details) {
-          results.push({
+          fetchedTickets.push({
             id,
             name: details[1] || 'Unknown Ticket',
             price: details[2] || BigInt(0),
@@ -69,7 +69,7 @@ export function useAvailableTickets(
           })
         }
       }
-      setTickets(results)
+      setTickets(fetchedTickets)
     } catch (_err) {
       setError('Failed to load tickets')
     } finally {
