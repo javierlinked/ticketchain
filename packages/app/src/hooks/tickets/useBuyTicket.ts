@@ -33,11 +33,11 @@ import { useTransactionNotifications } from '@/hooks/web3/useTransactionNotifica
  * ```
  */
 export function useBuyTicket(contractAddress: `0x${string}`) {
-  const { data: buyTxData, writeContract } = useWriteContract()
-  const { isLoading, error, isSuccess } = useWaitForTransactionReceipt({ hash: buyTxData })
+  const { data: buyTransactionHash, writeContract } = useWriteContract()
+  const { isLoading, error, isSuccess } = useWaitForTransactionReceipt({ hash: buyTransactionHash })
 
   // Use centralized notification handling
-  useTransactionNotifications(buyTxData, isSuccess, error, {
+  useTransactionNotifications(buyTransactionHash, isSuccess, error, {
     successMessage: 'Successfully purchased ticket!',
     errorMessagePrefix: 'Failed to purchase ticket',
     includeExplorerLink: true,

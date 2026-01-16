@@ -12,14 +12,14 @@ import { StatusIcon } from '@/components/alert'
 type NotificationOptions = Partial<Omit<Notification, 'message'>>
 
 interface NotificationContext {
-  Add: (message: string, options?: NotificationOptions) => void
-  Clear: () => void
+  addNotification: (message: string, options?: NotificationOptions) => void
+  clearNotifications: () => void
   notifications: Notification[]
 }
 
 const defaultNotificationContext: NotificationContext = {
-  Add: () => {},
-  Clear: () => {},
+  addNotification: () => {},
+  clearNotifications: () => {},
   notifications: [],
 }
 
@@ -45,7 +45,7 @@ export function NotificationProvider(props: PropsWithChildren) {
     }
   }, [])
 
-  function Add(message: string, options?: NotificationOptions) {
+  function addNotification(message: string, options?: NotificationOptions) {
     const notification: Notification = {
       message,
       type: options?.type || 'info',
@@ -58,13 +58,13 @@ export function NotificationProvider(props: PropsWithChildren) {
     toast(message, { type: notification.type, icon: <StatusIcon type={notification.type} /> })
   }
 
-  function Clear() {
+  function clearNotifications() {
     localStorage.removeItem('notifications')
     setNotifications([])
   }
 
   return (
-    <NotificationContext.Provider value={{ Add, Clear, notifications }}>
+    <NotificationContext.Provider value={{ addNotification, clearNotifications, notifications }}>
       {props.children}
       <ToastContainer
         limit={5}

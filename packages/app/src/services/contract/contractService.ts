@@ -52,8 +52,8 @@ export async function readContract<T>(
     // If we have retries left, wait and try again
     if (retries > 0) {
       // Exponential backoff: wait longer on each retry
-      const delay = (4 - retries) * 1000 // 1s, 2s, 3s
-      await new Promise((resolve) => setTimeout(resolve, delay))
+      const retryDelayMs = (4 - retries) * 1000 // 1s, 2s, 3s
+      await new Promise((resolve) => setTimeout(resolve, retryDelayMs))
       
       if (process.env.NODE_ENV === 'development') {
         console.warn(`Contract read failed, retrying... (${retries} attempts remaining)`)

@@ -58,7 +58,7 @@ export function useTicketIds(
     setLoading(true)
     setError(null)
     try {
-      const ids: bigint[] = []
+      const fetchedTicketIds: bigint[] = []
       const safeLength = Math.min(Number(ticketIdsLength), 100)
       for (let i = 0; i < safeLength; i++) {
         try {
@@ -71,12 +71,12 @@ export function useTicketIds(
             },
             chain
           )
-          if (id) ids.push(id)
+          if (id) fetchedTicketIds.push(id)
         } catch (_) {
           // Continue to next ID
         }
       }
-      setTicketIds(ids)
+      setTicketIds(fetchedTicketIds)
     } catch (_err) {
       setError('Failed to load ticket IDs')
     } finally {

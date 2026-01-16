@@ -137,7 +137,7 @@ function TicketsContent({
 
   useEffect(() => {
     if (isSuccess) {
-      setRefreshKey((k) => k + 1)
+      setRefreshKey((prevKey) => prevKey + 1)
     }
   }, [isSuccess])
 

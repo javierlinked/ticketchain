@@ -6,19 +6,19 @@ import React, { useEffect, useRef } from 'react'
 export function NetworkGuard({ children }: { children: React.ReactNode }) {
   const { chain } = useAccount()
   const { switchChain, isPending, error } = useSwitchChain()
-  const { Add } = useNotifications()
+  const { addNotification } = useNotifications()
   const notifiedRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (chain && chain.id !== sepolia.id) {
       if (notifiedRef.current !== chain.id) {
-        Add('You are connected to the wrong network. Please switch to Sepolia.', { type: 'warning' })
+        addNotification('You are connected to the wrong network. Please switch to Sepolia.', { type: 'warning' })
         notifiedRef.current = chain.id
       }
     } else {
       notifiedRef.current = null // Reset if on correct network
     }
-  }, [chain, Add])
+  }, [chain, addNotification])
 
   if (chain && chain.id !== sepolia.id) {
     return (
